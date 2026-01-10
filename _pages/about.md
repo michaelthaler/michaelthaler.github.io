@@ -11,6 +11,6 @@ I am a Lecturer (Assistant Professor) at University College London. I am also an
 
 My research is in behavioral economics, experimental economics, and political economy. I am particularly interested in belief updating, communication, and political polarization.
 
-See my CV and Google Scholar page for more information.
+See my [CV](/cv/) and [Google Scholar page]({{ site.author.googlescholar }}) for more information.
 
-You can contact me at michael.thaler@ucl.ac.uk.
+You can contact me at [michael.thaler@ucl.ac.uk](mailto:michael.thaler@ucl.ac.uk).
