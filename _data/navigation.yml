@@ -11,9 +11,6 @@ main:
   - title: "Publications"
     url: /publications/
 
-  - title: "Google Site"
-    url: /google-site/
-
   # - title: "Talks"
   #  url: /talks/    
 
@@ -27,7 +24,7 @@ main:
   #  url: /year-archive/
     
   - title: "CV"
-    url: /cv/
+    url: https://drive.google.com/file/d/1Qo9GKFjyF7tI595Iq_ns0Ff08pI2OAA6/view
     
   # - title: "CV"
   #   url: /cv-json/
