@@ -1,5 +1,6 @@
 ---
 title: "The Fake News Effect: Experimentally Identifying Motivated Reasoning Using Trust in News"
+status: "May 2024, pp. 1–38"
 collection: publications
 category: manuscripts
 permalink: /publication/2024-05-01-fake-news-effect-motivated-reasoning

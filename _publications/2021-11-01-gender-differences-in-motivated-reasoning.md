@@ -1,5 +1,6 @@
 ---
 title: "Gender Differences in Motivated Reasoning"
+status: "November 2021, pp. 501–518"
 collection: publications
 category: manuscripts
 permalink: /publication/2021-11-01-gender-differences-in-motivated-reasoning

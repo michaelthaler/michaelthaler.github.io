@@ -1,5 +1,6 @@
 ---
 title: "The Supply of Motivated Beliefs"
+status: "July 2025"
 collection: publications
 category: manuscripts
 permalink: /publication/2025-07-01-supply-of-motivated-beliefs

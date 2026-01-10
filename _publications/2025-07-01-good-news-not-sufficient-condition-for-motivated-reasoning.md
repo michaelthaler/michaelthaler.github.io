@@ -1,5 +1,6 @@
 ---
 title: "Good News Is Not a Sufficient Condition for Motivated Reasoning"
+status: "Accepted (draft from July 2025)"
 collection: publications
 category: manuscripts
 permalink: /publication/2025-07-01-good-news-not-sufficient-condition-for-motivated-reasoning

@@ -1,5 +1,7 @@
 ---
 title: "Overinference from Weak Signals and Underinference from Strong Signals"
+coauthors: "with Ned Augenblick and Eben Lazarus"
+status: "February 2025, pp. 335–401"
 collection: publications
 category: manuscripts
 permalink: /publication/2025-02-01-overinference-weak-signals-strong-signals

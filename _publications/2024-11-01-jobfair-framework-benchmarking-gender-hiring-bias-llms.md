@@ -1,5 +1,7 @@
 ---
 title: "JobFair: A Framework for Benchmarking Gender Hiring Bias in Large Language Models"
+coauthors: "with Ze Wang, Zekun Wu, Xin Guan, Adriano Koshiyama, Skylar Lu, Sachin Beepath, Ediz Ertekin Jr, and Maria Perez-Ortiz"
+status: "EMNLP 2024"
 collection: publications
 category: manuscripts
 permalink: /publication/2024-11-01-jobfair-framework-benchmarking-gender-hiring-bias-llms
