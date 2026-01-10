@@ -64,6 +64,30 @@
       <p class="archive__item-excerpt" itemprop="description"><p>{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}<strong><a href="{{ base_path }}{{ post.url }}" rel="permalink"> Read more</a></strong></p></p>
     {% endif %}
 
+    {% if post.collection == 'publications' %}
+      {% if post.media %}
+        <p><strong>Media:</strong>
+          {% for item in post.media %}
+            <a href="{{ item.url }}">{{ item.label }}</a>{% unless forloop.last %}, {% endunless %}
+          {% endfor %}
+        </p>
+      {% endif %}
+      {% if post.appendices %}
+        <p><strong>Appendices:</strong>
+          {% for item in post.appendices %}
+            <a href="{{ item.url }}">{{ item.label }}</a>{% unless forloop.last %}, {% endunless %}
+          {% endfor %}
+        </p>
+      {% endif %}
+      {% if post.replication %}
+        <p><strong>Replication:</strong>
+          {% for item in post.replication %}
+            <a href="{{ item.url }}">{{ item.label }}</a>{% unless forloop.last %}, {% endunless %}
+          {% endfor %}
+        </p>
+      {% endif %}
+    {% endif %}
+
     {% if post.slidesurl or post.bibtexurl %}
       <p>
         {% if post.slidesurl %}<a href="{{ post.slidesurl }}">Slides</a>{% endif %}
