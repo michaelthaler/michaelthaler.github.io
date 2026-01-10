@@ -1,0 +1,13 @@
+---
+title: "Good News Is Not a Sufficient Condition for Motivated Reasoning"
+status: "Accepted (draft from July 2025)"
+collection: publications
+category: manuscripts
+permalink: /publication/2025-07-01-good-news-not-sufficient-condition-for-motivated-reasoning
+excerpt: "People often receive good news that makes them feel better about the world around them, or bad news that makes them feel worse about it. This paper studies how the valence of news affects belief updating, absent functional and ego-relevant factors. Using experiments with over 1,900 participants and 6,000 observations, I test whether people engage in motivated reasoning to overly trust good news versus bad news on valence-relevant issues like cancer survival rates, others' happiness, and infant mortality. There is a precisely-estimated null effect for motivated reasoning towards good news. Modest effects, of one-third the effect of motivated reasoning in politics and performance, can be ruled out. Complementary survey evidence shows that most people expect good news to increase happiness, but do not expect it to systematically lead to motivated reasoning. These results suggest that belief-based utility is not sufficient in leading people to distort belief updating in order to favor those beliefs."
+date: 2025-07-01
+venue: "Review of Economics and Statistics"
+paperurl: "https://drive.google.com/file/d/1ZKulL18ifz0wOdm1zKKlMP6UvY-rA1ZU/view?usp=sharing"
+citation: 'Michael Thaler. "Good News Is Not a Sufficient Condition for Motivated Reasoning." Accepted, <i>Review of Economics and Statistics</i> (draft from July 2025).'
+---
+People often receive good news that makes them feel better about the world around them, or bad news that makes them feel worse about it. This paper studies how the valence of news affects belief updating, absent functional and ego-relevant factors. Using experiments with over 1,900 participants and 6,000 observations, I test whether people engage in motivated reasoning to overly trust good news versus bad news on valence-relevant issues like cancer survival rates, others' happiness, and infant mortality. There is a precisely-estimated null effect for motivated reasoning towards good news. Modest effects, of one-third the effect of motivated reasoning in politics and performance, can be ruled out. Complementary survey evidence shows that most people expect good news to increase happiness, but do not expect it to systematically lead to motivated reasoning. These results suggest that belief-based utility is not sufficient in leading people to distort belief updating in order to favor those beliefs.
