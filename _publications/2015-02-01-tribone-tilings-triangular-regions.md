@@ -11,3 +11,4 @@ paperurl: "https://link.springer.com/article/10.1007%2Fs00454-014-9652-z"
 citation: 'Michael Thaler. "Tribone Tilings of Triangular Regions that Cover All but Three Holes." <i>Discrete & Computational Geometry</i> (February 2015), pp. 466–477.'
 ---
 Discrete & Computational Geometry (February 2015, pp 466-477).
+Published in Discrete & Computational Geometry (February 2015, pp 466-477).
