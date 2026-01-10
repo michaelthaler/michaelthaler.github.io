@@ -22,10 +22,10 @@ repository               : "michaelthaler/michaelthaler.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
-  name             : "Your Sidebar Name"
+  avatar           : "mthaler_headshot.jpeg"
+  name             : "Michael Thaler"
   pronouns         : # example: "she/her"  
-  bio              : "Short biography for the left-hand sidebar"
+  bio              : "Behavio(u)ral economist at UCL"
   location         : "London, UK"
   employer         : "University College London"
   uri              : # URL
@@ -80,7 +80,7 @@ author:
 # Publication Category - The following the list of publication categories and their headings
 publication_category:
   publications:
-    title: 'Publications'
+    title: 'Published and Accepted'
   working_papers:
     title: 'Working Papers'
 
