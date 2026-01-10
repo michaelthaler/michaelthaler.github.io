@@ -64,10 +64,8 @@
       <p class="archive__item-excerpt" itemprop="description"><p>{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}<strong><a href="{{ base_path }}{{ post.url }}" rel="permalink"> Read more</a></strong></p></p>
     {% endif %}
 
-    {% if post.paperurl or post.slidesurl or post.bibtexurl %}
+    {% if post.slidesurl or post.bibtexurl %}
       <p>
-        {% if post.paperurl %}<a href="{{ post.paperurl }}">Paper</a>{% endif %}
-        {% if post.paperurl and (post.slidesurl or post.bibtexurl) %} | {% endif %}
         {% if post.slidesurl %}<a href="{{ post.slidesurl }}">Slides</a>{% endif %}
         {% if post.slidesurl and post.bibtexurl %} | {% endif %}
         {% if post.bibtexurl %}<a href="{{ post.bibtexurl }}">Bibtex</a>{% endif %}

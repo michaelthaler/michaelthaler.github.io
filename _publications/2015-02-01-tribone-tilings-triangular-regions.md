@@ -2,7 +2,7 @@
 title: "Tribone Tilings of Triangular Regions that Cover All but Three Holes"
 status: "February 2015, pp. 466–477"
 collection: publications
-category: manuscripts
+category: publications
 permalink: /publication/2015-02-01-tribone-tilings-triangular-regions
 excerpt: "Discrete & Computational Geometry (February 2015, pp 466-477)."
 date: 2015-02-01

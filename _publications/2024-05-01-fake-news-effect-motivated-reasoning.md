@@ -2,7 +2,7 @@
 title: "The Fake News Effect: Experimentally Identifying Motivated Reasoning Using Trust in News"
 status: "May 2024, pp. 1–38"
 collection: publications
-category: manuscripts
+category: publications
 permalink: /publication/2024-05-01-fake-news-effect-motivated-reasoning
 excerpt: "Motivated reasoning posits that people distort how they process information in the direction of beliefs they find attractive. This paper creates a novel experimental design to identify motivated reasoning from Bayesian updating when people have preconceived beliefs. It analyzes how subjects assess the veracity of information sources that tell them the median of their belief distribution is too high or too low. Bayesians infer nothing about the source veracity, but motivated beliefs are evoked. Evidence supports politically motivated reasoning about immigration, income mobility, crime, racial discrimination, gender, climate change, and gun laws. Motivated reasoning helps explain belief biases, polarization, and overconfidence."
 date: 2024-05-01
