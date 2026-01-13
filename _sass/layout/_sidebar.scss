@@ -262,3 +262,45 @@
     }
   }
 }
+
+@media (orientation: portrait) {
+  .author__urls-wrapper {
+    display: block;
+    width: 100%;
+  }
+
+  .author__urls-wrapper button {
+    display: none;
+  }
+
+  .author__urls {
+    display: block;
+    position: relative;
+    margin: 10px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .author__urls::before,
+  .author__urls::after {
+    display: none;
+  }
+
+  .author__urls li {
+    display: inline-block;
+    margin-right: 8px;
+    white-space: normal;
+  }
+
+  .author__urls a {
+    margin-bottom: 0;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .author__urls a i {
+    font-size: $type-size-4;
+  }
+}

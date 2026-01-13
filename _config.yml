@@ -26,8 +26,8 @@ author:
   name             : "Michael Thaler"
   pronouns         : # example: "she/her"  
   bio              : "Behavio(u)ral economist at UCL"
-  location         : "London, UK"
-  employer         : "University College London"
+  location         : # 
+  employer         : "UCL"
   uri              : # URL
   email            : "michaelthaler@ucl.ac.uk" 
 
