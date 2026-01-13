@@ -87,6 +87,12 @@
   // set width only, for non-square avatars
   // height: 36px;
 
+  @media (orientation: portrait) {
+    display: block;
+    width: auto;
+    margin-bottom: 10px;
+  }
+
   @include breakpoint($large) {
     display: block;
     width: auto;
@@ -96,6 +102,10 @@
   img {
     max-width: 175px;
     border-radius: 50%;
+
+    @media (orientation: portrait) {
+      max-width: 200px;
+    }
 
     @include breakpoint($large) {
       padding: 5px;
@@ -176,8 +186,17 @@
     display: block;
   }
 
+  @media (orientation: portrait) {
+    display: block;
+    width: 100%;
+  }
+
   button {
     margin-bottom: 0;
+
+    @media (orientation: portrait) {
+      display: none;
+    }
 
     @include breakpoint($large) {
       display: none;
@@ -209,6 +228,16 @@
     box-shadow: none;
   }
 
+  @media (orientation: portrait) {
+    display: block;
+    position: relative;
+    margin: 10px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
   &:before {
     display: block;
     content: "";
@@ -222,6 +251,10 @@
     z-index: 0;
 
     @include breakpoint($large) {
+      display: none;
+    }
+
+    @media (orientation: portrait) {
       display: none;
     }
   }
@@ -239,6 +272,10 @@
     z-index: 1;
 
     @include breakpoint($large) {
+      display: none;
+    }
+
+    @media (orientation: portrait) {
       display: none;
     }
   }
