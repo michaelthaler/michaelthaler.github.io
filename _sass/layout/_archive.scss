@@ -52,8 +52,19 @@
 .page__content {
 
   .archive__item-title {
-    margin-top: 1em;
+    margin-top: 0.25em;
     border-bottom: none;
+  }
+}
+
+.archive__item--publication {
+  .archive__item-title {
+    margin-bottom: 0.125em;
+  }
+
+  p,
+  .archive__item-abstract {
+    margin-bottom: 0.65em;
   }
 }
 
