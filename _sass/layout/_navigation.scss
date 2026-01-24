@@ -189,7 +189,7 @@
     }
   }
 
-  button {
+  > button {
     position: absolute;
     height: 2.5rem;
     right: 0;
@@ -226,11 +226,43 @@
     }
 
     #theme-toggle {
-      a {
-        width: 25px;
+      button {
         display: flex;
+        align-items: center;
         justify-content: center;
+        margin: 0 1rem;
+        padding: 0.5rem 0;
+        border: 0;
+        background: transparent;
+        color: var(--global-masthead-link-color);
         cursor: pointer;
+        position: relative;
+        font: inherit;
+
+        &:hover {
+          color: var(--global-masthead-link-color-hover);
+        }
+
+        &:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 4px;
+          background: var(--global-border-color);
+          width: 100%;
+          -webkit-transition: $global-transition;
+          transition: $global-transition;
+          -webkit-transform: scaleX(0);
+              -ms-transform: scaleX(0);
+                  transform: scaleX(0); /* hide*/
+        }
+
+        &:hover:before {
+          -webkit-transform: scaleX(1);
+              -ms-transform: scaleX(1);
+                  transform: scaleX(1); /* reveal*/
+        }
       }
     }
 
@@ -275,6 +307,23 @@
       margin: 0;
       padding: 10px 20px;
       font-size: $type-size-5;
+
+      &:hover {
+        color: var(--global-masthead-link-color-hover);
+        background: var(--global-border-color);
+      }
+    }
+
+    #theme-toggle button {
+      width: 100%;
+      margin: 0;
+      padding: 10px 20px;
+      border: 0;
+      background: transparent;
+      color: var(--global-masthead-link-color);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
 
       &:hover {
         color: var(--global-masthead-link-color-hover);
