@@ -67,16 +67,33 @@
 }
 
 .research-archive {
+  h2 {
+    font-size: $type-size-4;
+  }
+
   .archive__item-title {
     margin-bottom: 0.1em;
+    font-size: $type-size-5;
   }
 
   p {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.35em;
   }
 
   .archive__item-abstract {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.35em;
+  }
+
+  .list__item {
+    margin-bottom: 0.75em;
+    padding-bottom: 0.75em;
+    border-bottom: 1px solid var(--global-border-color);
+  }
+
+  .list__item:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
   }
 }
 
