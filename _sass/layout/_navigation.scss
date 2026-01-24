@@ -235,11 +235,15 @@
     }
 
     #theme-toggle {
-      a {
+      button {
         width: 25px;
         display: flex;
         justify-content: center;
         cursor: pointer;
+        background: none;
+        border: 0;
+        padding: 0;
+        color: inherit;
       }
     }
 
