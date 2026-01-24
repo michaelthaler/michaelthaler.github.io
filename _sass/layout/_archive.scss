@@ -67,25 +67,12 @@
 }
 
 .research-archive {
-  h2 {
-    font-size: $type-size-4;
-  }
-
   .archive__item-title {
-    margin-top: 0.05em;
-    margin-bottom: 0.01em;
-    font-size: $type-size-5;
-  }
-
-  p {
     margin-bottom: 0.15em;
   }
 
-  .archive__item-coauthors,
-  .archive__item-venue {
-    font-size: 0.9em;
-    margin-top: 0;
-    margin-bottom: 0.1em;
+  p {
+    margin-bottom: 0.75em;
   }
 
   .archive__item-abstract {
