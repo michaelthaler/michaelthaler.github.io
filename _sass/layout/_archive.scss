@@ -67,58 +67,16 @@
 }
 
 .research-archive {
-  h2 {
-    font-size: $type-size-4;
-  }
-
   .archive__item-title {
-    margin-top: 0.05em;
-    margin-bottom: 0.01em;
-    font-size: $type-size-5;
+    margin-bottom: 0.15em;
   }
 
   p {
-    margin-bottom: 0.15em;
-  }
-
-  .archive__item-coauthors,
-  .archive__item-venue {
-    font-size: 0.9em;
-    margin-top: 0;
-    margin-bottom: 0.1em;
+    margin-bottom: 0.75em;
   }
 
   .archive__item-abstract {
-    margin-bottom: 0.15em;
-
-    summary {
-      font-size: 0.9em;
-    }
-  }
-
-  .archive__item-media,
-  .archive__item-appendices,
-  .archive__item-replication {
-    font-size: 0.9em;
-    margin-bottom: 0.1em;
-  }
-
-  .archive__item-abstract + .archive__item-media,
-  .archive__item-media + .archive__item-appendices,
-  .archive__item-appendices + .archive__item-replication {
-    margin-top: 0.05em;
-  }
-
-  .list__item {
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid var(--global-border-color);
-  }
-
-  .list__item:last-of-type {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
+    margin-bottom: 0.75em;
   }
 }
 

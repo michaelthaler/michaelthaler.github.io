@@ -179,10 +179,14 @@
 
   a {
     display: block;
-    margin: 0 1rem;
+    margin: 0 0.75rem;
     padding: 0.5rem 0;
     color: var(--global-masthead-link-color);
     text-decoration: none;
+
+    @include breakpoint($medium) {
+      margin: 0 1rem;
+    }
 
     &:hover {
       color: var(--global-masthead-link-color-hover);
@@ -204,6 +208,11 @@
 
   .visible-links {
     display: table;
+    padding-right: 3rem;
+
+    @include breakpoint($medium) {
+      padding-right: 0;
+    }
 
     li {
       display: table-cell;
