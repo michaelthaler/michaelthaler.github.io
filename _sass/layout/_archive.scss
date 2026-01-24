@@ -73,21 +73,38 @@
 
   .archive__item-title {
     margin-top: 0.05em;
-    margin-bottom: 0.05em;
+    margin-bottom: 0.02em;
     font-size: $type-size-5;
   }
 
   p {
-    margin-bottom: 0.25em;
+    margin-bottom: 0.15em;
   }
 
   .archive__item-coauthors,
   .archive__item-venue {
     font-size: 0.9em;
+    margin-bottom: 0.1em;
   }
 
   .archive__item-abstract {
-    margin-bottom: 0.25em;
+    margin-bottom: 0.15em;
+
+    summary {
+      font-size: 0.9em;
+    }
+  }
+
+  .archive__item-media,
+  .archive__item-appendices {
+    font-size: 0.9em;
+    margin-bottom: 0.1em;
+  }
+
+  .archive__item-abstract + .archive__item-media,
+  .archive__item-media + .archive__item-appendices,
+  .archive__item-appendices + .archive__item-replication {
+    margin-top: 0.05em;
   }
 
   .list__item {
