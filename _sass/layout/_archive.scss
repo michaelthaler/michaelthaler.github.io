@@ -73,7 +73,7 @@
 
   .archive__item-title {
     margin-top: 0.05em;
-    margin-bottom: 0.02em;
+    margin-bottom: 0.01em;
     font-size: $type-size-5;
   }
 
@@ -84,6 +84,7 @@
   .archive__item-coauthors,
   .archive__item-venue {
     font-size: 0.9em;
+    margin-top: 0;
     margin-bottom: 0.1em;
   }
 
@@ -96,7 +97,8 @@
   }
 
   .archive__item-media,
-  .archive__item-appendices {
+  .archive__item-appendices,
+  .archive__item-replication {
     font-size: 0.9em;
     margin-bottom: 0.1em;
   }
