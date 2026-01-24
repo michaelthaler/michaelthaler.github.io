@@ -66,6 +66,20 @@
   }
 }
 
+.research-archive {
+  .archive__item-title {
+    margin-bottom: 0.15em;
+  }
+
+  p {
+    margin-bottom: 0.75em;
+  }
+
+  .archive__item-abstract {
+    margin-bottom: 0.75em;
+  }
+}
+
 .archive__item-teaser {
   border-radius: $border-radius;
   overflow: hidden;

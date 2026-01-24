@@ -8,26 +8,27 @@ author_profile: true
 {% include base_path %}
 
 <!-- New style rendering if publication categories are defined -->
-{% if site.publication_category %}
-  {% for category in site.publication_category  %}
-    {% assign title_shown = false %}
-    {% assign category_posts = site.publications | where: "category", category[0] %}
-    {% if category[0] == "working_papers" %}
-      {% assign category_posts = category_posts | sort: "order" %}
-    {% else %}
-      {% assign category_posts = category_posts | sort: "date" | reverse %}
-    {% endif %}
-    {% for post in category_posts %}
-      {% unless title_shown %}
-        <h2>{{ category[1].title }}</h2><hr />
-        {% assign title_shown = true %}
-      {% endunless %}
+<div class="research-archive">
+  {% if site.publication_category %}
+    {% for category in site.publication_category  %}
+      {% assign title_shown = false %}
+      {% assign category_posts = site.publications | where: "category", category[0] %}
+      {% if category[0] == "working_papers" %}
+        {% assign category_posts = category_posts | sort: "order" %}
+      {% else %}
+        {% assign category_posts = category_posts | sort: "date" | reverse %}
+      {% endif %}
+      {% for post in category_posts %}
+        {% unless title_shown %}
+          <h2>{{ category[1].title }}</h2><hr />
+          {% assign title_shown = true %}
+        {% endunless %}
+        {% include archive-single.html %}
+      {% endfor %}
+    {% endfor %}
+  {% else %}
+    {% for post in site.publications reversed %}
       {% include archive-single.html %}
     {% endfor %}
-  {% endfor %}
-{% else %}
-  {% for post in site.publications reversed %}
-    {% include archive-single.html %}
-  {% endfor %}
-{% endif %}
-
+  {% endif %}
+</div>
