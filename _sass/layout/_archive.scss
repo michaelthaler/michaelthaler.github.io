@@ -72,12 +72,18 @@
   }
 
   .archive__item-title {
-    margin-bottom: 0.1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.08em;
     font-size: $type-size-5;
   }
 
   p {
     margin-bottom: 0.35em;
+  }
+
+  .archive__item-coauthors,
+  .archive__item-venue {
+    font-size: 0.95em;
   }
 
   .archive__item-abstract {
