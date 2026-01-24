@@ -105,6 +105,7 @@
 
   .archive__item-abstract + .archive__item-media,
   .archive__item-media + .archive__item-appendices,
+  .archive__item-media + .archive__item-replication,
   .archive__item-appendices + .archive__item-replication {
     margin-top: 0.05em;
   }
