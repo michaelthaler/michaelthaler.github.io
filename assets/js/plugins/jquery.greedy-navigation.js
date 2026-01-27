@@ -10,10 +10,14 @@ var $btn = $('#site-nav > button');
 var $vlinks = $('#site-nav .visible-links');
 var $vlinks_persist_tail = $vlinks.children("*.persist.tail");
 var $hlinks = $('#site-nav .hidden-links');
+var $themeToggle = $('#theme-toggle');
 
 var breaks = [];
 
 function updateNav() {
+  if ($hlinks.find('#theme-toggle').length) {
+    $themeToggle.appendTo($vlinks);
+  }
 
   var availableSpace = $btn.hasClass('hidden') ? $nav.width() : $nav.width() - $btn.width() - 30;
 
