@@ -6,26 +6,7 @@ collection: publications
 category: working_papers
 order: 3
 permalink: /publication/2026-04-01-bad-news-policy-views
-excerpt: >-
-  There is widespread opposition to affirmative action policies. We study
-  whether personal disappointments shape preferences for such policies.
-  Specifically, we test whether individuals' college admissions outcomes,
-  relative to their expectations, influence their attitudes toward affirmative
-  action policies. Using a retrospective survey among recent White and Asian
-  college applicants, we find that disappointed individuals---those who were
-  admitted to fewer schools than anticipated---are relatively more likely to
-  believe that affirmative action played an important role in their admissions
-  outcomes, have the lowest support for affirmative action policies, and are
-  more willing to donate to an anti-affirmative action organization. They also
-  hold more negative views about the academic qualifications of under-represented
-  minorities. To isolate the causal effect of "bad news" from selection, we
-  conduct a complementary survey experiment with parents of future college
-  applicants. We randomize whether parents receive information about their
-  child's admissions prospects. Providing bad news to overconfident parents
-  causes them to increase opposition to affirmative action and donate to an
-  anti-affirmative action organization. Results suggest that some individuals
-  attribute bad news to external factors, specifically policies that benefit
-  out-groups.
+excerpt: "There is widespread opposition to affirmative action policies. We study whether personal disappointments shape preferences for such policies. Specifically, we test whether individuals' college admissions outcomes, relative to their expectations, influence their attitudes toward affirmative action policies. Using a retrospective survey among recent White and Asian college applicants, we find that disappointed individuals---those who were admitted to fewer schools than anticipated---are relatively more likely to believe that affirmative action played an important role in their admissions outcomes, have the lowest support for affirmative action policies, and are more willing to donate to an anti-affirmative action organization. They also hold more negative views about the academic qualifications of under-represented minorities. To isolate the causal effect of \"bad news\" from selection, we conduct a complementary survey experiment with parents of future college applicants. We randomize whether parents receive information about their child's admissions prospects. Providing bad news to overconfident parents causes them to increase opposition to affirmative action and donate to an anti-affirmative action organization. Results suggest that some individuals attribute bad news to external factors, specifically policies that benefit out-groups."
 date: 2026-04-01
 venue: "Working Paper"
 paperurl: "https://drive.google.com/file/d/1tfcc1P_i4iu4sCmXHovKR49wg0DCPHBF/view?usp=drive_link"
