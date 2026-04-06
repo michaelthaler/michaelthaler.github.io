@@ -1,6 +1,10 @@
 ---
 title: "Bad News and Policy Views: Expectations, Disappointment, and Opposition to Affirmative Action"
-coauthors: "with Louis-Pierre Lepage and Heather Sarsons"
+coauthors:
+  - name: "Louis-Pierre Lepage"
+    url: "https://sites.google.com/view/lepagelp/"
+  - name: "Heather Sarsons"
+    url: "https://sites.google.com/view/sarsons/"
 status: "April 2026"
 collection: publications
 category: working_papers

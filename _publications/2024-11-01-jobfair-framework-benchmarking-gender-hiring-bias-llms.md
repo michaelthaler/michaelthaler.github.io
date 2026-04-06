@@ -1,6 +1,22 @@
 ---
 title: "JobFair: A Framework for Benchmarking Gender Hiring Bias in Large Language Models"
-coauthors: "with Ze Wang, Zekun Wu, Xin Guan, Adriano Koshiyama, Skylar Lu, Sachin Beepath, Ediz Ertekin Jr, and Maria Perez-Ortiz"
+coauthors:
+  - name: "Ze Wang"
+    url: "https://sites.google.com/view/ucl-zewang"
+  - name: "Zekun Wu"
+    url: "https://981526092.github.io/zekunwu.github.io/"
+  - name: "Xin Guan"
+    url: "https://www.linkedin.com/in/xin-guan-90476b1ba"
+  - name: "Adriano Koshiyama"
+    url: "https://profiles.ucl.ac.uk/55874-adriano-koshiyama"
+  - name: "Skylar Lu"
+    url: "https://www.linkedin.com/in/skylarlu"
+  - name: "Sachin Beepath"
+    url: "https://www.turing.ac.uk/people/external-researchers/sachin-beepath"
+  - name: "Ediz Ertekin Jr"
+    url: "https://www.edizertekinjr.com/"
+  - name: "Maria Perez-Ortiz"
+    url: "https://www.mariaperezortiz.com/"
 status: "November 2024"
 collection: publications
 category: publications

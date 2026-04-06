@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "jekyll",
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["-c", "cd /tmp && /usr/local/lib/ruby/gems/4.0.0/bin/jekyll serve --future --source /Users/mthaler/GitHub/michaelthaler.github.io --destination /tmp/_site_preview"],
+      "port": 4000
+    }
+  ]
+}

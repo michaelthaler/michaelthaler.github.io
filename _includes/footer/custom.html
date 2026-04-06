@@ -14,4 +14,12 @@
     await mermaid.run({querySelector:'code.language-mermaid'});
 </script>
 
+<!-- Coauthor link click handler -->
+<script>
+document.addEventListener('click', function(e) {
+  var link = e.target.closest('.coauthor-link[data-href]');
+  if (link) window.open(link.getAttribute('data-href'), '_blank');
+});
+</script>
+
 <!-- end custom footer snippets -->

@@ -1,6 +1,10 @@
 ---
 title: "Overinference from Weak Signals and Underinference from Strong Signals"
-coauthors: "with Ned Augenblick and Eben Lazarus"
+coauthors:
+  - name: "Ned Augenblick"
+    url: "https://faculty.haas.berkeley.edu/ned/"
+  - name: "Eben Lazarus"
+    url: "https://ebenlazarus.github.io/"
 status: "February 2025, pp. 335–401"
 collection: publications
 category: publications

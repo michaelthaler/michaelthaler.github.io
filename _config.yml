@@ -25,11 +25,11 @@ author:
   avatar           : "mthaler_headshot.jpeg"
   name             : "Michael Thaler"
   pronouns         : # example: "she/her"  
-  bio              : "Behavio(u)ral economist"
-  location         : "London, UK"
-  employer         : "UCL"
+  bio              : "Behavio(u)ral economist at UCL"
+  location         :
+  employer         :
   uri              : # URL
-  email            : "michaelthaler@ucl.ac.uk" 
+  email            : "michael.thaler@ucl.ac.uk"
 
   # Academic websites
   academia         : # URL
@@ -83,6 +83,8 @@ publication_category:
     title: 'Published and Accepted'
   working_papers:
     title: 'Working Papers'
+  other:
+    title: 'And Now for Something Completely Different'
 
 # Site Settings
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"

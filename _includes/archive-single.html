@@ -34,8 +34,11 @@
       {% else %}
         <a href="{{ base_path }}{{ post.url }}" rel="permalink">{{ title }}</a>
       {% endif %}
+      {% if post.collection == 'publications' and post.coauthors %}
+        <span class="archive__item-coauthors">(with {% for author in post.coauthors %}{% if author.url %}<span class="coauthor-link" data-href="{{ author.url }}">{{ author.name }}</span>{% else %}{{ author.name }}{% endif %}{% if forloop.last == false %}{% if forloop.length == 2 %} and {% elsif forloop.rindex == 2 %}, and {% else %}, {% endif %}{% endif %}{% endfor %})</span>
+      {% endif %}
     </h2>
-    
+
     {% if post.read_time %}
       <p class="page__meta"><i class="fa fa-clock" aria-hidden="true"></i> {% include read-time.html %}</p>
     {% endif %}
@@ -43,26 +46,12 @@
         {% if post.collection == 'teaching' %}
           <p> {{ post.type }}, <i>{{ post.venue }}</i>, {{ post.date | default: "1900-01-01" | date: "%Y" }} </p>
         {% elsif post.collection == 'publications' %}
-          {% if post.coauthors %}
-            <p>{{ post.coauthors }}</p>
-          {% endif %}
           {% if post.venue %}
             <p><i>{{ post.venue }}</i>{% if post.status %}, {{ post.status }}{% endif %}</p>
           {% endif %}
         {% elsif post.date %}
          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].date_label | default: "Published:" }}</strong> <time datetime="{{ post.date | default: "1900-01-01" | date_to_xmlschema }}">{{ post.date | default: "1900-01-01" | date: "%B %d, %Y" }}</time></p>
         {% endif %}
-
-    {% if post.collection == 'publications' and post.excerpt %}
-      <details class="archive__item-abstract">
-        <summary>Abstract</summary>
-        <div class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify }}</div>
-      </details>
-    {% elsif post.excerpt and site.read_more != 'enabled' %}
-      <p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify }}</p>
-    {% elsif post.excerpt and site.read_more == 'enabled' %}
-      <p class="archive__item-excerpt" itemprop="description"><p>{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}<strong><a href="{{ base_path }}{{ post.url }}" rel="permalink"> Read more</a></strong></p></p>
-    {% endif %}
 
     {% if post.collection == 'publications' %}
       {% if post.media %}
@@ -86,6 +75,17 @@
           {% endfor %}
         </p>
       {% endif %}
+    {% endif %}
+
+    {% if post.collection == 'publications' and post.excerpt %}
+      <details class="archive__item-abstract">
+        <summary>Abstract</summary>
+        <div class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify }}</div>
+      </details>
+    {% elsif post.excerpt and site.read_more != 'enabled' %}
+      <p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify }}</p>
+    {% elsif post.excerpt and site.read_more == 'enabled' %}
+      <p class="archive__item-excerpt" itemprop="description"><p>{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}<strong><a href="{{ base_path }}{{ post.url }}" rel="permalink"> Read more</a></strong></p></p>
     {% endif %}
 
     {% if post.slidesurl or post.bibtexurl %}

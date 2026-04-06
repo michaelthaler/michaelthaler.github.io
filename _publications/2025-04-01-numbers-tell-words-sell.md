@@ -1,6 +1,10 @@
 ---
 title: "Numbers Tell, Words Sell"
-coauthors: "with Mattie Toma and Victor Yaneng Wang"
+coauthors:
+  - name: "Mattie Toma"
+    url: "https://www.mattietoma.com/"
+  - name: "Victor Yaneng Wang"
+    url: "https://www.victor-yaneng-wang.com/"
 status: "Revise & Resubmit (April 2025)"
 collection: publications
 category: working_papers

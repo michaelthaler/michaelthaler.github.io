@@ -1,6 +1,16 @@
 ---
 title: "Polarization and Public Health: Partisan Differences in Social Distancing during the Coronavirus Pandemic"
-coauthors: "with Hunt Allcott, Levi Boxell, Jacob Conway, Matthew Gentzkow, and David Yang"
+coauthors:
+  - name: "Hunt Allcott"
+    url: "https://allcott.people.stanford.edu/"
+  - name: "Levi Boxell"
+    url: "https://sites.google.com/site/leviboxell/"
+  - name: "Jacob Conway"
+    url: "https://jacob-conway.com/"
+  - name: "Matthew Gentzkow"
+    url: "https://www.matthewgentzkow.com/"
+  - name: "David Yang"
+    url: "http://davidyyang.com/"
 status: "November 2020, 104254"
 collection: publications
 category: publications
