@@ -79,10 +79,10 @@ author:
 
 # Publication Category - The following the list of publication categories and their headings
 publication_category:
-  publications:
-    title: 'Published and Accepted'
   working_papers:
     title: 'Working Papers'
+  publications:
+    title: 'Published and Accepted'
   other:
     title: 'And Now for Something Completely Different'
 
