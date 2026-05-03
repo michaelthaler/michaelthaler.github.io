@@ -80,24 +80,12 @@
               <span class="field-label">Travel mode</span>
               <select id="modeSelect" name="mode">
                 <option value="auto">Drive</option>
+                <option value="bus">Bus</option>
                 <option value="bicycle">Bike</option>
                 <option value="pedestrian">Walk</option>
               </select>
             </label>
           </div>
-
-          <section class="transit-panel">
-            <label class="transit-toggle">
-              <input id="transitToggle" name="showTransit" type="checkbox" />
-              <span class="toggle-copy">
-                <span class="field-label">Public transit routes</span>
-                <span class="field-hint">
-                  Overlay trains, buses, trams, subway, and rail lines on top
-                  of the reachable-area map.
-                </span>
-              </span>
-            </label>
-          </section>
 
           <details class="advanced-panel">
             <summary>Authentication</summary>
@@ -140,10 +128,6 @@
             <div>
               <dt>Mode</dt>
               <dd id="summaryMode">Drive</dd>
-            </div>
-            <div>
-              <dt>Transit</dt>
-              <dd id="summaryTransit">Off</dd>
             </div>
           </dl>
         </section>

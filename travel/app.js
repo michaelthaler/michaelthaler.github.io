@@ -1,8 +1,8 @@
 const STADIA_TILE_BASE =
   "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png";
-const TRANSIT_TILE_BASE = "https://pt.facilmap.org/tile/{z}/{x}/{y}.png";
 const MODE_LABELS = {
   auto: "Drive",
+  bus: "Bus",
   bicycle: "Bike",
   pedestrian: "Walk",
 };
@@ -13,7 +13,6 @@ const locateButton = document.querySelector("#locateButton");
 const timeRange = document.querySelector("#timeRange");
 const timeOutput = document.querySelector("#timeOutput");
 const modeSelect = document.querySelector("#modeSelect");
-const transitToggle = document.querySelector("#transitToggle");
 const apiKeyInput = document.querySelector("#apiKeyInput");
 const submitButton = document.querySelector("#submitButton");
 const statusCard = document.querySelector(".status-card");
@@ -21,13 +20,11 @@ const statusText = document.querySelector("#statusText");
 const summaryOrigin = document.querySelector("#summaryOrigin");
 const summaryTime = document.querySelector("#summaryTime");
 const summaryMode = document.querySelector("#summaryMode");
-const summaryTransit = document.querySelector("#summaryTransit");
 
 const savedState = loadState();
 locationInput.value = savedState.location || "";
 timeRange.value = savedState.time || "30";
-modeSelect.value = savedState.mode || "auto";
-transitToggle.checked = Boolean(savedState.showTransit);
+modeSelect.value = MODE_LABELS[savedState.mode] ? savedState.mode : "auto";
 apiKeyInput.value = savedState.apiKey || "";
 timeOutput.textContent = `${timeRange.value} min`;
 
@@ -35,8 +32,6 @@ let activeOrigin = isOrigin(savedState.origin) ? savedState.origin : null;
 let tileLayer;
 let originMarker;
 let isochroneLayer;
-let transitLayer;
-let hasShownTransitError = false;
 
 const map = L.map("map", {
   zoomControl: false,
@@ -49,10 +44,6 @@ L.control
   })
   .addTo(map);
 
-map.createPane("transitPane");
-map.getPane("transitPane").style.zIndex = "430";
-map.getPane("transitPane").style.pointerEvents = "none";
-
 tileLayer = L.tileLayer(getTileUrl(apiKeyInput.value.trim()), {
   maxZoom: 20,
   attribution:
@@ -60,23 +51,6 @@ tileLayer = L.tileLayer(getTileUrl(apiKeyInput.value.trim()), {
     '&copy; <a href="https://openmaptiles.org/" target="_blank" rel="noreferrer">OpenMapTiles</a> ' +
     '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>',
 }).addTo(map);
-
-transitLayer = L.tileLayer(TRANSIT_TILE_BASE, {
-  pane: "transitPane",
-  maxZoom: 18,
-  opacity: 0.85,
-  attribution:
-    'Transit routes via <a href="https://pt.facilmap.org/" target="_blank" rel="noreferrer">openptmap / FacilMap</a>',
-});
-
-transitLayer.on("tileerror", () => {
-  if (hasShownTransitError) {
-    return;
-  }
-
-  hasShownTransitError = true;
-  setStatus("The public transit overlay could not be loaded right now. You can still use the reachable-area map.", true);
-});
 
 isochroneLayer = L.geoJSON(null, {
   style: feature => {
@@ -109,11 +83,6 @@ timeRange.addEventListener("input", () => {
 
 modeSelect.addEventListener("change", () => {
   summaryMode.textContent = MODE_LABELS[modeSelect.value];
-  persistState();
-});
-
-transitToggle.addEventListener("change", () => {
-  updateTransitLayer();
   persistState();
 });
 
@@ -173,13 +142,10 @@ if (locationInput.value) {
 }
 summaryTime.textContent = `${timeRange.value} min`;
 summaryMode.textContent = MODE_LABELS[modeSelect.value];
-summaryTransit.textContent = transitToggle.checked ? "On" : "Off";
 
 if (activeOrigin) {
   setOrigin(activeOrigin, { centerMap: true });
 }
-
-updateTransitLayer();
 
 async function drawReachableArea() {
   const query = locationInput.value.trim();
@@ -329,22 +295,6 @@ function updateTileLayer(apiKey) {
   tileLayer.setUrl(getTileUrl(apiKey));
 }
 
-function updateTransitLayer() {
-  if (transitToggle.checked) {
-    if (!map.hasLayer(transitLayer)) {
-      transitLayer.addTo(map);
-    }
-    summaryTransit.textContent = "On";
-    return;
-  }
-
-  if (map.hasLayer(transitLayer)) {
-    map.removeLayer(transitLayer);
-  }
-
-  summaryTransit.textContent = "Off";
-}
-
 function getStadiaConfiguration(apiKey) {
   if (!globalThis.stadiaMapsApi?.Configuration) {
     throw new Error("The Stadia Maps SDK did not load. Refresh the page and try again.");
@@ -434,7 +384,6 @@ function persistState() {
     location: locationInput.value.trim(),
     time: timeRange.value,
     mode: modeSelect.value,
-    showTransit: transitToggle.checked,
     apiKey: apiKeyInput.value.trim(),
     origin:
       activeOrigin && locationInput.value.trim() === activeOrigin.label
