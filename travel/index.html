@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Travel Time Reach Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+    <script defer src="https://unpkg.com/@stadiamaps/api@9"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="control-panel">
+        <p class="eyebrow">Leaflet + Stadia Maps</p>
+        <h1>Map the full area you can reach within a trip window.</h1>
+        <p class="intro-copy">
+          Start with your current location, an address, or raw coordinates, then
+          draw a travel-time isochrone directly on the map.
+        </p>
+
+        <form id="travelForm" class="travel-form" autocomplete="off">
+          <label class="field">
+            <span class="field-label">Starting location</span>
+            <div class="location-row">
+              <input
+                id="locationInput"
+                name="location"
+                type="text"
+                placeholder="King's Cross, London or 51.5319, -0.1237"
+                required
+              />
+              <button
+                id="locateButton"
+                class="secondary-button"
+                type="button"
+              >
+                Use my location
+              </button>
+            </div>
+            <span class="field-hint">
+              Click anywhere on the map to drop an origin instantly.
+            </span>
+          </label>
+
+          <div class="control-grid">
+            <label class="field">
+              <span class="field-label">Travel time</span>
+              <div class="range-row">
+                <input
+                  id="timeRange"
+                  name="travelTime"
+                  type="range"
+                  min="5"
+                  max="120"
+                  step="5"
+                  value="30"
+                />
+                <output id="timeOutput" for="timeRange">30 min</output>
+              </div>
+            </label>
+
+            <label class="field">
+              <span class="field-label">Travel mode</span>
+              <select id="modeSelect" name="mode">
+                <option value="auto">Drive</option>
+                <option value="bicycle">Bike</option>
+                <option value="pedestrian">Walk</option>
+              </select>
+            </label>
+          </div>
+
+          <details class="advanced-panel">
+            <summary>Authentication</summary>
+            <label class="field">
+              <span class="field-label">Stadia API key</span>
+              <input
+                id="apiKeyInput"
+                name="apiKey"
+                type="password"
+                placeholder="Optional on localhost"
+              />
+            </label>
+            <p class="advanced-copy">
+              Local development on <code>localhost</code> often works without a
+              key, but if routing is blocked in your environment, add a Stadia
+              API key here. On a published site, prefer domain auth for the live
+              host.
+            </p>
+          </details>
+
+          <button id="submitButton" class="primary-button" type="submit">
+            Show reachable area
+          </button>
+        </form>
+
+        <section class="status-card" aria-live="polite">
+          <p id="statusText" class="status-text">
+            Ready when you are. Choose a location and travel time to draw the
+            map.
+          </p>
+          <dl class="summary-grid">
+            <div>
+              <dt>Origin</dt>
+              <dd id="summaryOrigin">Not set</dd>
+            </div>
+            <div>
+              <dt>Time</dt>
+              <dd id="summaryTime">30 min</dd>
+            </div>
+            <div>
+              <dt>Mode</dt>
+              <dd id="summaryMode">Drive</dd>
+            </div>
+          </dl>
+        </section>
+      </aside>
+
+      <main class="map-stage">
+        <div id="map" aria-label="Travel reachability map"></div>
+        <p class="map-caption">
+          Stadia Maps basemap with a travel-time isochrone overlay.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>
