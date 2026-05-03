@@ -1,10 +1,17 @@
 const STADIA_TILE_BASE =
   "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png";
+const TRAVELTIME_API_BASE = "https://api.traveltimeapp.com/v4";
 const MODE_LABELS = {
   auto: "Drive",
-  bus: "Bus",
   bicycle: "Bike",
   pedestrian: "Walk",
+  public_transport: "Transit",
+};
+const MODE_COLORS = {
+  auto: "#0d7a6a",
+  bicycle: "#2e75b6",
+  pedestrian: "#8c5a1e",
+  public_transport: "#c04a88",
 };
 
 const form = document.querySelector("#travelForm");
@@ -13,25 +20,34 @@ const locateButton = document.querySelector("#locateButton");
 const timeRange = document.querySelector("#timeRange");
 const timeOutput = document.querySelector("#timeOutput");
 const modeSelect = document.querySelector("#modeSelect");
+const departureField = document.querySelector("#departureField");
+const departureInput = document.querySelector("#departureInput");
 const apiKeyInput = document.querySelector("#apiKeyInput");
+const travelTimeAppIdInput = document.querySelector("#travelTimeAppIdInput");
+const travelTimeApiKeyInput = document.querySelector("#travelTimeApiKeyInput");
 const submitButton = document.querySelector("#submitButton");
 const statusCard = document.querySelector(".status-card");
 const statusText = document.querySelector("#statusText");
 const summaryOrigin = document.querySelector("#summaryOrigin");
 const summaryTime = document.querySelector("#summaryTime");
 const summaryMode = document.querySelector("#summaryMode");
+const summaryDeparture = document.querySelector("#summaryDeparture");
 
 const savedState = loadState();
 locationInput.value = savedState.location || "";
 timeRange.value = savedState.time || "30";
 modeSelect.value = MODE_LABELS[savedState.mode] ? savedState.mode : "auto";
 apiKeyInput.value = savedState.apiKey || "";
+travelTimeAppIdInput.value = savedState.travelTimeAppId || "";
+travelTimeApiKeyInput.value = savedState.travelTimeApiKey || "";
+departureInput.value = savedState.departureTime || getDefaultDepartureTime();
 timeOutput.textContent = `${timeRange.value} min`;
 
 let activeOrigin = isOrigin(savedState.origin) ? savedState.origin : null;
 let tileLayer;
 let originMarker;
 let isochroneLayer;
+let currentIsochroneMode = modeSelect.value;
 
 const map = L.map("map", {
   zoomControl: false,
@@ -53,8 +69,8 @@ tileLayer = L.tileLayer(getTileUrl(apiKeyInput.value.trim()), {
 }).addTo(map);
 
 isochroneLayer = L.geoJSON(null, {
-  style: feature => {
-    const color = feature?.properties?.color || "#0d7a6a";
+  style: () => {
+    const color = MODE_COLORS[currentIsochroneMode] || MODE_COLORS.auto;
     return {
       color,
       weight: 2,
@@ -83,11 +99,20 @@ timeRange.addEventListener("input", () => {
 
 modeSelect.addEventListener("change", () => {
   summaryMode.textContent = MODE_LABELS[modeSelect.value];
+  syncModeVisibility();
+  syncDepartureSummary();
   persistState();
 });
 
 apiKeyInput.addEventListener("change", () => {
   updateTileLayer(apiKeyInput.value.trim());
+  persistState();
+});
+
+travelTimeAppIdInput.addEventListener("input", persistState);
+travelTimeApiKeyInput.addEventListener("input", persistState);
+departureInput.addEventListener("input", () => {
+  syncDepartureSummary();
   persistState();
 });
 
@@ -142,6 +167,8 @@ if (locationInput.value) {
 }
 summaryTime.textContent = `${timeRange.value} min`;
 summaryMode.textContent = MODE_LABELS[modeSelect.value];
+syncModeVisibility();
+syncDepartureSummary();
 
 if (activeOrigin) {
   setOrigin(activeOrigin, { centerMap: true });
@@ -169,13 +196,20 @@ async function drawReachableArea() {
     setOrigin(origin, { centerMap: true });
 
     setStatus(`Drawing the ${travelTime}-minute reachable area...`);
-    const data = await fetchIsochrone({
-      origin,
-      travelTime,
-      mode,
-      apiKey,
-    });
+    const data =
+      mode === "public_transport"
+        ? await fetchTravelTimeTransitIsochrone({
+            origin,
+            travelTime,
+          })
+        : await fetchIsochrone({
+            origin,
+            travelTime,
+            mode,
+            apiKey,
+          });
 
+    currentIsochroneMode = mode;
     isochroneLayer.clearLayers();
     isochroneLayer.addData(data);
     const bounds = isochroneLayer.getBounds();
@@ -258,6 +292,52 @@ async function fetchIsochrone({ origin, travelTime, mode, apiKey }) {
   });
 }
 
+async function fetchTravelTimeTransitIsochrone({ origin, travelTime }) {
+  const appId = travelTimeAppIdInput.value.trim();
+  const apiKey = travelTimeApiKeyInput.value.trim();
+
+  if (!appId || !apiKey) {
+    throw new Error("Transit mode needs a TravelTime Application ID and API key in the Authentication panel.");
+  }
+
+  const departureTime = departureInput.value
+    ? toIsoString(departureInput.value)
+    : new Date().toISOString();
+
+  const response = await fetch(`${TRAVELTIME_API_BASE}/time-map`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/geo+json",
+      "X-Application-Id": appId,
+      "X-Api-Key": apiKey,
+    },
+    body: JSON.stringify({
+      departure_searches: [
+        {
+          id: "public-transit",
+          coords: {
+            lat: origin.lat,
+            lng: origin.lon,
+          },
+          transportation: {
+            type: "public_transport",
+          },
+          departure_time: departureTime,
+          travel_time: travelTime * 60,
+          properties: ["is_only_walking"],
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(await readTravelTimeError(response));
+  }
+
+  return response.json();
+}
+
 function setOrigin(origin, { centerMap }) {
   activeOrigin = origin;
   locationInput.value = origin.label;
@@ -293,6 +373,20 @@ function getTileUrl(apiKey) {
 
 function updateTileLayer(apiKey) {
   tileLayer.setUrl(getTileUrl(apiKey));
+}
+
+function syncModeVisibility() {
+  const isTransitMode = modeSelect.value === "public_transport";
+  departureField.hidden = !isTransitMode;
+}
+
+function syncDepartureSummary() {
+  if (modeSelect.value !== "public_transport") {
+    summaryDeparture.textContent = "Now";
+    return;
+  }
+
+  summaryDeparture.textContent = formatDepartureDisplay(departureInput.value);
 }
 
 function getStadiaConfiguration(apiKey) {
@@ -371,6 +465,23 @@ function getErrorMessage(error) {
   return "Something went wrong while drawing the reachable area.";
 }
 
+async function readTravelTimeError(response) {
+  let data;
+
+  try {
+    data = await response.json();
+  } catch (_error) {
+    return "TravelTime request failed.";
+  }
+
+  return (
+    data.description ||
+    data.error?.message ||
+    data.error ||
+    "TravelTime request failed."
+  );
+}
+
 function loadState() {
   try {
     return JSON.parse(localStorage.getItem("travel-map-state")) || {};
@@ -385,6 +496,9 @@ function persistState() {
     time: timeRange.value,
     mode: modeSelect.value,
     apiKey: apiKeyInput.value.trim(),
+    travelTimeAppId: travelTimeAppIdInput.value.trim(),
+    travelTimeApiKey: travelTimeApiKeyInput.value.trim(),
+    departureTime: departureInput.value,
     origin:
       activeOrigin && locationInput.value.trim() === activeOrigin.label
         ? activeOrigin
@@ -413,4 +527,37 @@ function isOrigin(value) {
     typeof value.lon === "number" &&
     Number.isFinite(value.lon)
   );
+}
+
+function getDefaultDepartureTime() {
+  const now = new Date();
+  now.setMinutes(Math.ceil(now.getMinutes() / 15) * 15, 0, 0);
+  const year = now.getFullYear();
+  const month = `${now.getMonth() + 1}`.padStart(2, "0");
+  const day = `${now.getDate()}`.padStart(2, "0");
+  const hours = `${now.getHours()}`.padStart(2, "0");
+  const minutes = `${now.getMinutes()}`.padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+function toIsoString(localValue) {
+  return new Date(localValue).toISOString();
+}
+
+function formatDepartureDisplay(localValue) {
+  if (!localValue) {
+    return "Select time";
+  }
+
+  const date = new Date(localValue);
+  if (Number.isNaN(date.getTime())) {
+    return "Select time";
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
 }

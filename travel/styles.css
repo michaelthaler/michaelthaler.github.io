@@ -102,6 +102,7 @@ h1 {
 .field + .field,
 .field + .advanced-panel,
 .control-grid,
+.transit-only,
 .primary-button,
 .status-card {
   margin-top: 18px;

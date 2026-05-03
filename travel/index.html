@@ -80,12 +80,21 @@
               <span class="field-label">Travel mode</span>
               <select id="modeSelect" name="mode">
                 <option value="auto">Drive</option>
-                <option value="bus">Bus</option>
                 <option value="bicycle">Bike</option>
                 <option value="pedestrian">Walk</option>
+                <option value="public_transport">Transit</option>
               </select>
             </label>
           </div>
+
+          <label id="departureField" class="field transit-only" hidden>
+            <span class="field-label">Transit departure time</span>
+            <input id="departureInput" name="departureTime" type="datetime-local" />
+            <span class="field-hint">
+              TravelTime public transit is timetable-based, so the departure
+              time changes the reachable area.
+            </span>
+          </label>
 
           <details class="advanced-panel">
             <summary>Authentication</summary>
@@ -98,11 +107,30 @@
                 placeholder="Optional on localhost"
               />
             </label>
+            <label class="field">
+              <span class="field-label">TravelTime Application ID</span>
+              <input
+                id="travelTimeAppIdInput"
+                name="travelTimeAppId"
+                type="text"
+                placeholder="Required for Transit mode"
+              />
+            </label>
+            <label class="field">
+              <span class="field-label">TravelTime API key</span>
+              <input
+                id="travelTimeApiKeyInput"
+                name="travelTimeApiKey"
+                type="password"
+                placeholder="Required for Transit mode"
+              />
+            </label>
             <p class="advanced-copy">
               Local development on <code>localhost</code> often works without a
               key, but if routing is blocked in your environment, add a Stadia
-              API key here. On a published site, prefer domain auth for the live
-              host.
+              API key here. Transit mode uses TravelTime credentials and is best
+              proxied server-side in production instead of exposing secrets in
+              the browser.
             </p>
           </details>
 
@@ -128,6 +156,10 @@
             <div>
               <dt>Mode</dt>
               <dd id="summaryMode">Drive</dd>
+            </div>
+            <div>
+              <dt>Departure</dt>
+              <dd id="summaryDeparture">Now</dd>
             </div>
           </dl>
         </section>
