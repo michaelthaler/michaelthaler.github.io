@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exploration</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Sequential Exploration Board Game Mockup</p>
+          <h1>Exploration</h1>
+          <p class="intro">
+            Reveal a hidden world, manage scarce energy, and claim far-flung destinations before
+            the endgame spaces bring the expedition to a close.
+          </p>
+        </div>
+        <div class="turn-chip" id="turnChip"></div>
+      </header>
+
+      <main class="layout">
+        <aside class="panel panel--status">
+          <section>
+            <p class="panel-label">Expeditions</p>
+            <div class="scoreboard" id="scoreboard"></div>
+          </section>
+
+          <section class="action-stack">
+            <p class="panel-label">Turn Actions</p>
+            <div class="energy-readout">
+              <span>Energy Left</span>
+              <strong id="energyValue">0</strong>
+            </div>
+            <button class="button button--primary" id="exploitButton" type="button">
+              Exploit Current Hex
+            </button>
+            <button class="button" id="endTurnButton" type="button">End Turn</button>
+            <button class="button button--ghost" id="skipSpyButton" type="button" hidden>
+              Skip Spy
+            </button>
+          </section>
+
+          <section>
+            <p class="panel-label">Legend</p>
+            <ul class="legend">
+              <li>
+                <span class="legend-swatch legend-swatch--scene"></span>
+                <div>
+                  <strong>Destination</strong>
+                  <span>Exploit for a hidden VP value from 2 to 5.</span>
+                </div>
+              </li>
+              <li>
+                <span class="legend-swatch legend-swatch--tea"></span>
+                <div>
+                  <strong>Tea</strong>
+                  <span>Bank 2 extra energy for your next turn.</span>
+                </div>
+              </li>
+              <li>
+                <span class="legend-swatch legend-swatch--spy"></span>
+                <div>
+                  <strong>Spy</strong>
+                  <span>Reveal all adjacent hidden hexes.</span>
+                </div>
+              </li>
+              <li>
+                <span class="legend-swatch legend-swatch--study"></span>
+                <div>
+                  <strong>Study</strong>
+                  <span>Unlock the next ring for that player.</span>
+                </div>
+              </li>
+              <li>
+                <span class="legend-swatch legend-swatch--endgame"></span>
+                <div>
+                  <strong>Endgame</strong>
+                  <span>Two last-ring spaces end the game once both have been exploited.</span>
+                </div>
+              </li>
+              <li>
+                <span class="legend-swatch legend-swatch--hidden"></span>
+                <div>
+                  <strong>Face-down</strong>
+                  <span>Unknown hexes stay private until exploited or known by both players.</span>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <p class="panel-label">Ring Distribution</p>
+            <div class="distribution-list" id="distributionList"></div>
+          </section>
+        </aside>
+
+        <section class="panel panel--board">
+          <div class="board-topline">
+            <div>
+              <p class="panel-label">Board State</p>
+              <h2 id="actionHint">Loading board...</h2>
+            </div>
+            <div class="board-meta">
+              <span id="endgameValue"></span>
+              <span id="seedValue"></span>
+              <button class="button button--small" id="resetButton" type="button">Reset Seed</button>
+              <button class="button button--small" id="regenerateButton" type="button">
+                New Board
+              </button>
+            </div>
+          </div>
+
+          <div class="board-frame">
+            <svg id="board" aria-label="Hex board mockup" role="img"></svg>
+          </div>
+
+          <div class="board-note" id="phaseNote"></div>
+        </section>
+
+        <aside class="panel panel--detail">
+          <section>
+            <p class="panel-label">Hex Detail</p>
+            <div class="tile-detail" id="tileDetail"></div>
+          </section>
+
+          <section>
+            <p class="panel-label">Turn Log</p>
+            <ol class="log" id="log"></ol>
+          </section>
+        </aside>
+      </main>
+
+      <div class="overlay" id="privacyOverlay" hidden>
+        <div class="overlay-card">
+          <p class="panel-label">Private Turn</p>
+          <h2 id="overlayTitle"></h2>
+          <p id="overlayCopy"></p>
+          <button class="button button--primary" id="overlayButton" type="button"></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
