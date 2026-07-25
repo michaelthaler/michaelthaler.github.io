@@ -2,7 +2,7 @@
 title: "JobFair: A Framework for Benchmarking Gender Hiring Bias in Large Language Models"
 coauthors:
   - name: "Ze Wang"
-    url: "https://sites.google.com/view/ucl-zewang"
+    url: "https://zewang.uk/"
   - name: "Zekun Wu"
     url: "https://981526092.github.io/zekunwu.github.io/"
   - name: "Xin Guan"
