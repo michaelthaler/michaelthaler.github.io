@@ -1,52 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Thaler's talk map</title>
 
-    <!DOCTYPE html>
-    <html>
-    <head>
-    	<title>Leaflet debug page</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TM195RVGW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9TM195RVGW');
+    </script>
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TM195RVGW"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-9TM195RVGW');
-        </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.css">
+    <link rel="stylesheet" href="leaflet_dist/screen.css">
+    <link rel="stylesheet" href="leaflet_dist/MarkerCluster.css">
+    <link rel="stylesheet" href="leaflet_dist/MarkerCluster.Default.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.js"></script>
+    <script src="leaflet_dist/leaflet.markercluster-src.js"></script>
+    <script src="org-locations.js"></script>
+  </head>
+  <body>
+    <main class="talk-map-shell">
+      <div id="map" aria-label="Map of Michael Thaler's in-person academic talks"></div>
+      <p id="map-summary" class="map-summary"></p>
+    </main>
 
-    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.css" />
-    	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.js"></script>
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	<link rel="stylesheet" href="leaflet_dist/screen.css" />
+    <script>
+      var map = L.map('map', { center: [35, 0], zoom: 2 });
+      var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      });
+      var markers = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 70
+      });
 
-    	<link rel="stylesheet" href="leaflet_dist/MarkerCluster.css" />
-    	<link rel="stylesheet" href="leaflet_dist/MarkerCluster.Default.css" />
-    	<script src="leaflet_dist/leaflet.markercluster-src.js"></script>
-    	<script src="org-locations.js"></script>
+      tiles.addTo(map);
 
-    </head>
-    <body>
+      talkLocations.forEach(function (talk) {
+        var role = talk.role || 'Presentation';
+        var popup =
+          '<div class="talk-popup">' +
+            '<strong>' + talk.venue + '</strong>' +
+            '<span>' + role + ' &middot; ' + talk.year + '</span>' +
+            '<span>' + talk.location + '</span>' +
+          '</div>';
+        var marker = L.marker([talk.lat, talk.lng], {
+          title: talk.venue + ' (' + talk.year + ')'
+        });
 
-    	<div id="map"></div>
-    	<span>Mouse over a cluster to see the bounds of its children and click a cluster to zoom to those bounds</span>
-    	<script type="text/javascript">
-    		var tiles = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-              maxZoom: 18,
-              attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
-                    }),
-    			latlng = L.latLng(30, 10);
-    		var map = L.map('map', {center: latlng, zoom: 0.7, layers: [tiles]});
-    		var markers = L.markerClusterGroup({
-    			showCoverageOnHover: false,
-    			maxClusterRadius: 80
-    			});
-    		for (var i = 0; i < addressPoints.length; i++) {
-    			var a = addressPoints[i];
-    			var title = a[0];
-    			var marker = L.marker(new L.LatLng(a[1], a[2]), { title: title });
-    			marker.bindPopup(title);
-    			markers.addLayer(marker);
-    		}
-    		map.addLayer(markers);
-    		map.zoomIn();
-    	</script>
-    </body>
-    </html>
+        marker.bindPopup(popup);
+        markers.addLayer(marker);
+      });
+
+      map.addLayer(markers);
+      map.fitBounds(markers.getBounds(), { padding: [24, 24], maxZoom: 2 });
+
+      document.getElementById('map-summary').textContent =
+        talkLocations.length + ' in-person presentations and discussant appearances, 2019-2026. Virtual events are omitted.';
+    </script>
+  </body>
+</html>
