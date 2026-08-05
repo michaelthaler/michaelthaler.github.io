@@ -24,7 +24,6 @@
   <body>
     <main class="talk-map-shell">
       <div id="map" aria-label="Map of Michael Thaler's academic talks: in-person talks in green, virtual talks in purple, and scheduled talks in blue"></div>
-      <p id="map-summary" class="map-summary"></p>
     </main>
 
     <script>
@@ -33,28 +32,25 @@
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       });
-      var inPersonMarkers = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        maxClusterRadius: 70
-      });
-      var virtualMarkers = L.markerClusterGroup({
+      var categoryOrder = ['in-person', 'virtual', 'scheduled'];
+      var markers = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 70,
         iconCreateFunction: function (cluster) {
-          return L.divIcon({
-            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
-            className: 'marker-cluster marker-cluster-virtual',
-            iconSize: L.point(40, 40)
+          var categories = {};
+          cluster.getAllChildMarkers().forEach(function (marker) {
+            categories[marker.options.talkCategory] = true;
           });
-        }
-      });
-      var scheduledMarkers = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        maxClusterRadius: 70,
-        iconCreateFunction: function (cluster) {
+          var presentCategories = categoryOrder.filter(function (category) {
+            return categories[category];
+          });
+          var categoryClass = presentCategories.length === 1
+            ? 'marker-cluster-' + presentCategories[0]
+            : 'marker-cluster-mixed marker-cluster-mixed-' + presentCategories.join('-');
+
           return L.divIcon({
             html: '<div><span>' + cluster.getChildCount() + '</span></div>',
-            className: 'marker-cluster marker-cluster-scheduled',
+            className: 'marker-cluster ' + categoryClass,
             iconSize: L.point(40, 40)
           });
         }
@@ -62,26 +58,31 @@
       var inPersonTalks = talkLocations.filter(function (talk) { return !talk.virtual && !talk.scheduled; });
       var virtualTalks = talkLocations.filter(function (talk) { return talk.virtual; });
       var scheduledTalks = talkLocations.filter(function (talk) { return talk.scheduled; });
+      var pinSvg =
+        '<svg viewBox="0 0 24 32" aria-hidden="true" focusable="false">' +
+          '<path d="M12 1C5.9 1 1 5.9 1 12c0 8.2 11 19 11 19s11-10.8 11-19C23 5.9 18.1 1 12 1z"></path>' +
+          '<circle cx="12" cy="12" r="4"></circle>' +
+        '</svg>';
       var inPersonIcon = L.divIcon({
-        html: '<span class="talk-marker__dot talk-marker__dot--in-person" aria-hidden="true"></span>',
+        html: '<span class="talk-marker__pin talk-marker__pin--in-person">' + pinSvg + '</span>',
         className: 'talk-marker talk-marker--in-person',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        popupAnchor: [0, -10]
+        iconSize: [28, 36],
+        iconAnchor: [14, 34],
+        popupAnchor: [0, -32]
       });
       var virtualIcon = L.divIcon({
-        html: '<span class="talk-marker__dot talk-marker__dot--virtual" aria-hidden="true"></span>',
+        html: '<span class="talk-marker__pin talk-marker__pin--virtual">' + pinSvg + '</span>',
         className: 'talk-marker talk-marker--virtual',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        popupAnchor: [0, -10]
+        iconSize: [28, 36],
+        iconAnchor: [14, 34],
+        popupAnchor: [0, -32]
       });
       var scheduledIcon = L.divIcon({
-        html: '<span class="talk-marker__dot talk-marker__dot--scheduled" aria-hidden="true"></span>',
+        html: '<span class="talk-marker__pin talk-marker__pin--scheduled">' + pinSvg + '</span>',
         className: 'talk-marker talk-marker--scheduled',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        popupAnchor: [0, -10]
+        iconSize: [28, 36],
+        iconAnchor: [14, 34],
+        popupAnchor: [0, -32]
       });
 
       tiles.addTo(map);
@@ -97,23 +98,16 @@
           '</div>';
         var marker = L.marker([talk.lat, talk.lng], {
           title: talk.venue + ' (' + talk.year + ')' + (talk.scheduled ? ' — scheduled' : (talk.virtual ? ' — virtual' : '')),
-          icon: talk.scheduled ? scheduledIcon : (talk.virtual ? virtualIcon : inPersonIcon)
+          icon: talk.scheduled ? scheduledIcon : (talk.virtual ? virtualIcon : inPersonIcon),
+          talkCategory: talk.scheduled ? 'scheduled' : (talk.virtual ? 'virtual' : 'in-person')
         });
 
         marker.bindPopup(popup);
-        if (talk.scheduled) {
-          scheduledMarkers.addLayer(marker);
-        } else if (talk.virtual) {
-          virtualMarkers.addLayer(marker);
-        } else {
-          inPersonMarkers.addLayer(marker);
-        }
+        markers.addLayer(marker);
       });
 
-      map.addLayer(inPersonMarkers);
-      map.addLayer(virtualMarkers);
-      map.addLayer(scheduledMarkers);
-      map.fitBounds(inPersonMarkers.getBounds().extend(virtualMarkers.getBounds()).extend(scheduledMarkers.getBounds()), {
+      map.addLayer(markers);
+      map.fitBounds(markers.getBounds(), {
         padding: [24, 24],
         maxZoom: 2
       });
@@ -121,6 +115,11 @@
       var legend = L.control({ position: 'topright' });
       legend.onAdd = function () {
         var container = L.DomUtil.create('div', 'talk-legend');
+        var inPersonItems = inPersonTalks.map(function (talk) {
+          return '<li><strong>' + talk.year + '</strong><span>' +
+            '<span>' + talk.venue + '</span><small>' + talk.location + '</small>' +
+          '</span></li>';
+        }).join('');
         var virtualItems = virtualTalks.map(function (talk) {
           return '<li><strong>' + talk.year + '</strong><span>' +
             '<span>' + talk.venue + '</span><small>' + talk.location + '</small>' +
@@ -134,10 +133,13 @@
 
         container.setAttribute('aria-label', 'Talk format legend');
         container.innerHTML =
-          '<div class="talk-legend__item">' +
-            '<span class="talk-legend__dot talk-legend__dot--in-person" aria-hidden="true"></span>' +
-            '<span>In person (' + inPersonTalks.length + ')</span>' +
-          '</div>' +
+          '<details class="in-person-talks">' +
+            '<summary>' +
+              '<span class="talk-legend__dot talk-legend__dot--in-person" aria-hidden="true"></span>' +
+              '<span>In Person (' + inPersonTalks.length + ')</span>' +
+            '</summary>' +
+            '<ul>' + inPersonItems + '</ul>' +
+          '</details>' +
           '<details class="virtual-talks">' +
             '<summary>' +
               '<span class="talk-legend__dot talk-legend__dot--virtual" aria-hidden="true"></span>' +
@@ -158,11 +160,6 @@
         return container;
       };
       legend.addTo(map);
-
-      document.getElementById('map-summary').textContent =
-        inPersonTalks.length + ' in-person presentations and discussant appearances, plus ' +
-        virtualTalks.length + ' virtual presentations and ' + scheduledTalks.length +
-        ' scheduled presentations, 2019-2026. Purple markers use the host, organizer, or planned venue.';
     </script>
   </body>
 </html>
