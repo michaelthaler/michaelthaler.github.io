@@ -23,14 +23,6 @@ body {
   border-radius: 6px;
 }
 
-.map-summary {
-  flex: 0 0 auto;
-  margin: 8px 2px 0;
-  color: #555;
-  font-size: 0.85rem;
-  line-height: 1.35;
-}
-
 .talk-popup {
   display: grid;
   gap: 3px;
@@ -51,34 +43,55 @@ body {
   background: transparent;
 }
 
-.talk-marker__dot {
-  box-sizing: border-box;
+.talk-marker__pin {
   display: block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  width: 28px;
+  height: 36px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.48));
 }
 
-.talk-marker__dot--in-person {
+.talk-marker__pin svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+
+.talk-marker__pin circle {
+  fill: #fff;
+  stroke: none;
+}
+
+.talk-marker__pin--in-person {
+  color: #6ecc39;
+}
+
+.talk-marker__pin--virtual {
+  color: #ad8bc6;
+}
+
+.talk-marker__pin--scheduled {
+  color: #2a81cb;
+}
+
+.marker-cluster-in-person {
+  background: rgba(110, 204, 57, 0.32);
+}
+
+.marker-cluster-in-person div {
   background: #6ecc39;
-}
-
-.talk-marker__dot--virtual {
-  background: #7b2cbf;
-}
-
-.talk-marker__dot--scheduled {
-  background: #2a81cb;
+  color: #244b11;
 }
 
 .marker-cluster-virtual {
-  background: rgba(123, 44, 191, 0.35);
+  background: rgba(173, 139, 198, 0.24);
 }
 
 .marker-cluster-virtual div {
-  background: #7b2cbf;
+  background: rgba(151, 111, 180, 0.72);
   color: #fff;
 }
 
@@ -89,6 +102,36 @@ body {
 .marker-cluster-scheduled div {
   background: #2a81cb;
   color: #fff;
+}
+
+.marker-cluster-mixed {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.marker-cluster-mixed-in-person-virtual {
+  background: conic-gradient(#6ecc39 0 50%, #ad8bc6 50% 100%);
+}
+
+.marker-cluster-mixed-in-person-scheduled {
+  background: conic-gradient(#6ecc39 0 50%, #2a81cb 50% 100%);
+}
+
+.marker-cluster-mixed-virtual-scheduled {
+  background: conic-gradient(#ad8bc6 0 50%, #2a81cb 50% 100%);
+}
+
+.marker-cluster-mixed-in-person-virtual-scheduled {
+  background: conic-gradient(
+    #6ecc39 0 33.333%,
+    #ad8bc6 33.333% 66.666%,
+    #2a81cb 66.666% 100%
+  );
+}
+
+.marker-cluster-mixed div {
+  background: rgba(255, 255, 255, 0.92);
+  color: #333;
+  font-weight: 700;
 }
 
 .talk-legend {
@@ -104,7 +147,7 @@ body {
   line-height: 1.3;
 }
 
-.talk-legend__item,
+.in-person-talks summary,
 .virtual-talks summary,
 .scheduled-talks summary {
   display: flex;
@@ -112,8 +155,15 @@ body {
   gap: 8px;
 }
 
-.talk-legend__item {
-  margin-bottom: 7px;
+.in-person-talks summary {
+  color: #39761f;
+  cursor: pointer;
+  font-weight: 600;
+  list-style-position: outside;
+}
+
+.in-person-talks summary::marker {
+  color: #39761f;
 }
 
 .talk-legend__dot {
@@ -131,7 +181,7 @@ body {
 }
 
 .talk-legend__dot--virtual {
-  background: #7b2cbf;
+  background: #ad8bc6;
 }
 
 .talk-legend__dot--scheduled {
@@ -139,16 +189,17 @@ body {
 }
 
 .virtual-talks summary {
-  color: #63219e;
+  color: #82679a;
   cursor: pointer;
   font-weight: 600;
   list-style-position: outside;
 }
 
 .virtual-talks summary::marker {
-  color: #63219e;
+  color: #82679a;
 }
 
+.virtual-talks,
 .scheduled-talks {
   margin-top: 7px;
 }
@@ -164,6 +215,7 @@ body {
   color: #1f679f;
 }
 
+.in-person-talks ul,
 .virtual-talks ul,
 .scheduled-talks ul {
   box-sizing: border-box;
@@ -175,6 +227,7 @@ body {
   list-style: none;
 }
 
+.in-person-talks li,
 .virtual-talks li,
 .scheduled-talks li {
   display: grid;
@@ -182,32 +235,43 @@ body {
   gap: 6px;
   padding: 6px 0;
   border-bottom: 1px solid #eee;
-  color: #63219e;
+  color: #82679a;
+}
+
+.in-person-talks li {
+  color: #39761f;
 }
 
 .scheduled-talks li {
   color: #1f679f;
 }
 
+.in-person-talks li:last-child,
 .virtual-talks li:last-child,
 .scheduled-talks li:last-child {
   border-bottom: 0;
 }
 
 .virtual-talks li strong {
-  color: #4f177f;
+  color: #705585;
+}
+
+.in-person-talks li strong {
+  color: #2f6219;
 }
 
 .scheduled-talks li strong {
   color: #16517f;
 }
 
+.in-person-talks li > span,
 .virtual-talks li > span,
 .scheduled-talks li > span {
   display: grid;
   gap: 2px;
 }
 
+.in-person-talks small,
 .virtual-talks small,
 .scheduled-talks small {
   color: #666;
@@ -227,6 +291,7 @@ body {
     width: min(230px, calc(100vw - 60px));
   }
 
+  .in-person-talks ul,
   .virtual-talks ul,
   .scheduled-talks ul {
     max-height: 190px;
