@@ -77,6 +77,67 @@ body {
   color: #2a81cb;
 }
 
+.country-marker {
+  border: 0;
+  background: transparent;
+}
+
+.country-marker__bubble {
+  box-sizing: border-box;
+  display: block;
+  width: 34px;
+  height: 34px;
+  padding: 5px;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.42);
+}
+
+.country-marker__bubble > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #333;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.country-marker__bubble--in-person {
+  background: #6ecc39;
+}
+
+.country-marker__bubble--virtual {
+  background: #ad8bc6;
+}
+
+.country-marker__bubble--scheduled {
+  background: #2a81cb;
+}
+
+.country-marker__bubble--mixed-in-person-virtual {
+  background: conic-gradient(#6ecc39 0 50%, #ad8bc6 50% 100%);
+}
+
+.country-marker__bubble--mixed-in-person-scheduled {
+  background: conic-gradient(#6ecc39 0 50%, #2a81cb 50% 100%);
+}
+
+.country-marker__bubble--mixed-virtual-scheduled {
+  background: conic-gradient(#ad8bc6 0 50%, #2a81cb 50% 100%);
+}
+
+.country-marker__bubble--mixed-in-person-virtual-scheduled {
+  background: conic-gradient(
+    #6ecc39 0 33.333%,
+    #ad8bc6 33.333% 66.666%,
+    #2a81cb 66.666% 100%
+  );
+}
+
 .marker-cluster-in-person {
   background: rgba(110, 204, 57, 0.32);
 }

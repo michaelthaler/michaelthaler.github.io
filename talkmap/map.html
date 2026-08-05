@@ -33,6 +33,56 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       });
       var categoryOrder = ['in-person', 'virtual', 'scheduled'];
+      var countryCenters = {
+        Australia: [-25.2744, 133.7751],
+        Austria: [47.5162, 14.5501],
+        Canada: [56.1304, -106.3468],
+        France: [46.2276, 2.2137],
+        Germany: [51.1657, 10.4515],
+        Italy: [41.8719, 12.5674],
+        Japan: [36.2048, 138.2529],
+        Luxembourg: [49.8153, 6.1296],
+        Netherlands: [52.1326, 5.2913],
+        Norway: [60.472, 8.4689],
+        Spain: [40.4637, -3.7492],
+        Sweden: [60.1282, 18.6435],
+        Switzerland: [46.8182, 8.2275],
+        UK: [55.3781, -3.436],
+        Uruguay: [-32.5228, -55.7658],
+        USA: [39.8283, -98.5795]
+      };
+
+      function getTalkCategory(talk) {
+        return talk.scheduled ? 'scheduled' : (talk.virtual ? 'virtual' : 'in-person');
+      }
+
+      function getTalkCountry(talk) {
+        var locationWithoutNote = talk.location.replace(/\s*\([^)]*\)\s*$/, '');
+        var locationParts = locationWithoutNote.split(',');
+        return locationParts[locationParts.length - 1].trim();
+      }
+
+      function getCategoryClass(talks, classPrefix) {
+        var categories = {};
+        talks.forEach(function (talk) {
+          categories[getTalkCategory(talk)] = true;
+        });
+        var presentCategories = categoryOrder.filter(function (category) {
+          return categories[category];
+        });
+
+        return presentCategories.length === 1
+          ? classPrefix + presentCategories[0]
+          : classPrefix + 'mixed ' + classPrefix + 'mixed-' + presentCategories.join('-');
+      }
+
+      var countryGroups = {};
+      talkLocations.forEach(function (talk) {
+        var country = getTalkCountry(talk);
+        countryGroups[country] = countryGroups[country] || [];
+        countryGroups[country].push(talk);
+      });
+
       var markers = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 70,
@@ -99,17 +149,104 @@
         var marker = L.marker([talk.lat, talk.lng], {
           title: talk.venue + ' (' + talk.year + ')' + (talk.scheduled ? ' — scheduled' : (talk.virtual ? ' — virtual' : '')),
           icon: talk.scheduled ? scheduledIcon : (talk.virtual ? virtualIcon : inPersonIcon),
-          talkCategory: talk.scheduled ? 'scheduled' : (talk.virtual ? 'virtual' : 'in-person')
+          talkCategory: getTalkCategory(talk)
         });
 
         marker.bindPopup(popup);
         markers.addLayer(marker);
       });
 
-      map.addLayer(markers);
-      map.fitBounds(markers.getBounds(), {
+      var countryLayer = L.featureGroup();
+      var showingCountryOverview = true;
+      var detailZoomThreshold = 2;
+      var europeDetailZoomThreshold = detailZoomThreshold + 3;
+
+      function getCurrentDetailZoomThreshold() {
+        var center = map.getCenter();
+        var isCenteredOnEurope = center.lat >= 34 && center.lat <= 72 && center.lng >= -25 && center.lng <= 45;
+        return isCenteredOnEurope ? europeDetailZoomThreshold : detailZoomThreshold;
+      }
+
+      function showTalkDetails() {
+        showingCountryOverview = false;
+        if (map.hasLayer(countryLayer)) {
+          map.removeLayer(countryLayer);
+        }
+        if (!map.hasLayer(markers)) {
+          map.addLayer(markers);
+        }
+      }
+
+      function showCountryTalks(talks) {
+        showTalkDetails();
+
+        var talkBounds = L.latLngBounds(talks.map(function (talk) {
+          return [talk.lat, talk.lng];
+        }));
+        var southWest = talkBounds.getSouthWest();
+        var northEast = talkBounds.getNorthEast();
+        var isSingleLocation = southWest.lat === northEast.lat && southWest.lng === northEast.lng;
+
+        if (isSingleLocation) {
+          map.setView(talkBounds.getCenter(), 6);
+        } else {
+          map.fitBounds(talkBounds, {
+            padding: [60, 60],
+            maxZoom: 6
+          });
+        }
+      }
+
+      Object.keys(countryGroups).sort().forEach(function (country) {
+        var talks = countryGroups[country];
+        var countryCenter = countryCenters[country] || [
+          talks.reduce(function (total, talk) { return total + talk.lat; }, 0) / talks.length,
+          talks.reduce(function (total, talk) { return total + talk.lng; }, 0) / talks.length
+        ];
+        var countryIcon = L.divIcon({
+          html: '<span class="country-marker__bubble ' + getCategoryClass(talks, 'country-marker__bubble--') + '">' +
+            '<span>' + talks.length + '</span>' +
+          '</span>',
+          className: 'country-marker',
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
+        });
+        var countryMarker = L.marker(countryCenter, {
+          title: country + ' — ' + talks.length + (talks.length === 1 ? ' talk' : ' talks'),
+          icon: countryIcon
+        });
+
+        countryMarker.on('click', function () {
+          showCountryTalks(talks);
+        });
+        countryLayer.addLayer(countryMarker);
+      });
+
+      function showCountryOverview() {
+        showingCountryOverview = true;
+        if (map.hasLayer(markers)) {
+          map.removeLayer(markers);
+        }
+        if (!map.hasLayer(countryLayer)) {
+          map.addLayer(countryLayer);
+        }
+      }
+
+      function updateLayerForMapView() {
+        var currentDetailZoomThreshold = getCurrentDetailZoomThreshold();
+        if (showingCountryOverview && map.getZoom() > currentDetailZoomThreshold) {
+          showTalkDetails();
+        } else if (!showingCountryOverview && map.getZoom() <= currentDetailZoomThreshold) {
+          showCountryOverview();
+        }
+      }
+
+      map.on('zoomend moveend', updateLayerForMapView);
+
+      showCountryOverview();
+      map.fitBounds(countryLayer.getBounds(), {
         padding: [24, 24],
-        maxZoom: 2
+        maxZoom: detailZoomThreshold
       });
 
       var legend = L.control({ position: 'topright' });
