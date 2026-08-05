@@ -46,6 +46,174 @@ body {
   color: #555;
 }
 
+.talk-marker {
+  border: 0;
+  background: transparent;
+}
+
+.talk-marker__dot {
+  box-sizing: border-box;
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.talk-marker__dot--in-person {
+  background: #6ecc39;
+}
+
+.talk-marker__dot--virtual {
+  background: #7b2cbf;
+}
+
+.talk-marker__dot--scheduled {
+  background: #2a81cb;
+}
+
+.marker-cluster-virtual {
+  background: rgba(123, 44, 191, 0.35);
+}
+
+.marker-cluster-virtual div {
+  background: #7b2cbf;
+  color: #fff;
+}
+
+.marker-cluster-scheduled {
+  background: rgba(42, 129, 203, 0.35);
+}
+
+.marker-cluster-scheduled div {
+  background: #2a81cb;
+  color: #fff;
+}
+
+.talk-legend {
+  box-sizing: border-box;
+  width: min(260px, calc(100vw - 64px));
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  color: #333;
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.talk-legend__item,
+.virtual-talks summary,
+.scheduled-talks summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.talk-legend__item {
+  margin-bottom: 7px;
+}
+
+.talk-legend__dot {
+  display: inline-block;
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.talk-legend__dot--in-person {
+  background: #6ecc39;
+}
+
+.talk-legend__dot--virtual {
+  background: #7b2cbf;
+}
+
+.talk-legend__dot--scheduled {
+  background: #2a81cb;
+}
+
+.virtual-talks summary {
+  color: #63219e;
+  cursor: pointer;
+  font-weight: 600;
+  list-style-position: outside;
+}
+
+.virtual-talks summary::marker {
+  color: #63219e;
+}
+
+.scheduled-talks {
+  margin-top: 7px;
+}
+
+.scheduled-talks summary {
+  color: #1f679f;
+  cursor: pointer;
+  font-weight: 600;
+  list-style-position: outside;
+}
+
+.scheduled-talks summary::marker {
+  color: #1f679f;
+}
+
+.virtual-talks ul,
+.scheduled-talks ul {
+  box-sizing: border-box;
+  max-height: 260px;
+  margin: 9px -4px 0 0;
+  padding: 0 8px 0 20px;
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  list-style: none;
+}
+
+.virtual-talks li,
+.scheduled-talks li {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  color: #63219e;
+}
+
+.scheduled-talks li {
+  color: #1f679f;
+}
+
+.virtual-talks li:last-child,
+.scheduled-talks li:last-child {
+  border-bottom: 0;
+}
+
+.virtual-talks li strong {
+  color: #4f177f;
+}
+
+.scheduled-talks li strong {
+  color: #16517f;
+}
+
+.virtual-talks li > span,
+.scheduled-talks li > span {
+  display: grid;
+  gap: 2px;
+}
+
+.virtual-talks small,
+.scheduled-talks small {
+  color: #666;
+  font-size: 0.72rem;
+}
+
 @media (max-width: 640px) {
   .talk-map-shell {
     padding: 6px;
@@ -53,5 +221,14 @@ body {
 
   #map {
     min-height: 500px;
+  }
+
+  .talk-legend {
+    width: min(230px, calc(100vw - 60px));
+  }
+
+  .virtual-talks ul,
+  .scheduled-talks ul {
+    max-height: 190px;
   }
 }

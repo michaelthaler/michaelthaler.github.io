@@ -23,7 +23,7 @@
   </head>
   <body>
     <main class="talk-map-shell">
-      <div id="map" aria-label="Map of Michael Thaler's in-person academic talks"></div>
+      <div id="map" aria-label="Map of Michael Thaler's academic talks: in-person talks in green, virtual talks in purple, and scheduled talks in blue"></div>
       <p id="map-summary" class="map-summary"></p>
     </main>
 
@@ -33,34 +33,136 @@
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       });
-      var markers = L.markerClusterGroup({
+      var inPersonMarkers = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 70
+      });
+      var virtualMarkers = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 70,
+        iconCreateFunction: function (cluster) {
+          return L.divIcon({
+            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+            className: 'marker-cluster marker-cluster-virtual',
+            iconSize: L.point(40, 40)
+          });
+        }
+      });
+      var scheduledMarkers = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 70,
+        iconCreateFunction: function (cluster) {
+          return L.divIcon({
+            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+            className: 'marker-cluster marker-cluster-scheduled',
+            iconSize: L.point(40, 40)
+          });
+        }
+      });
+      var inPersonTalks = talkLocations.filter(function (talk) { return !talk.virtual && !talk.scheduled; });
+      var virtualTalks = talkLocations.filter(function (talk) { return talk.virtual; });
+      var scheduledTalks = talkLocations.filter(function (talk) { return talk.scheduled; });
+      var inPersonIcon = L.divIcon({
+        html: '<span class="talk-marker__dot talk-marker__dot--in-person" aria-hidden="true"></span>',
+        className: 'talk-marker talk-marker--in-person',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10]
+      });
+      var virtualIcon = L.divIcon({
+        html: '<span class="talk-marker__dot talk-marker__dot--virtual" aria-hidden="true"></span>',
+        className: 'talk-marker talk-marker--virtual',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10]
+      });
+      var scheduledIcon = L.divIcon({
+        html: '<span class="talk-marker__dot talk-marker__dot--scheduled" aria-hidden="true"></span>',
+        className: 'talk-marker talk-marker--scheduled',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10]
       });
 
       tiles.addTo(map);
 
       talkLocations.forEach(function (talk) {
         var role = talk.role || 'Presentation';
+        var format = talk.scheduled ? 'Scheduled presentation' : (talk.virtual ? 'Virtual presentation' : role);
         var popup =
           '<div class="talk-popup">' +
             '<strong>' + talk.venue + '</strong>' +
-            '<span>' + role + ' &middot; ' + talk.year + '</span>' +
-            '<span>' + talk.location + '</span>' +
+            '<span>' + format + ' &middot; ' + talk.year + '</span>' +
+            '<span>' + (talk.virtual ? 'Mapped to ' : '') + talk.location + '</span>' +
           '</div>';
         var marker = L.marker([talk.lat, talk.lng], {
-          title: talk.venue + ' (' + talk.year + ')'
+          title: talk.venue + ' (' + talk.year + ')' + (talk.scheduled ? ' — scheduled' : (talk.virtual ? ' — virtual' : '')),
+          icon: talk.scheduled ? scheduledIcon : (talk.virtual ? virtualIcon : inPersonIcon)
         });
 
         marker.bindPopup(popup);
-        markers.addLayer(marker);
+        if (talk.scheduled) {
+          scheduledMarkers.addLayer(marker);
+        } else if (talk.virtual) {
+          virtualMarkers.addLayer(marker);
+        } else {
+          inPersonMarkers.addLayer(marker);
+        }
       });
 
-      map.addLayer(markers);
-      map.fitBounds(markers.getBounds(), { padding: [24, 24], maxZoom: 2 });
+      map.addLayer(inPersonMarkers);
+      map.addLayer(virtualMarkers);
+      map.addLayer(scheduledMarkers);
+      map.fitBounds(inPersonMarkers.getBounds().extend(virtualMarkers.getBounds()).extend(scheduledMarkers.getBounds()), {
+        padding: [24, 24],
+        maxZoom: 2
+      });
+
+      var legend = L.control({ position: 'topright' });
+      legend.onAdd = function () {
+        var container = L.DomUtil.create('div', 'talk-legend');
+        var virtualItems = virtualTalks.map(function (talk) {
+          return '<li><strong>' + talk.year + '</strong><span>' +
+            '<span>' + talk.venue + '</span><small>' + talk.location + '</small>' +
+          '</span></li>';
+        }).join('');
+        var scheduledItems = scheduledTalks.map(function (talk) {
+          return '<li><strong>' + talk.year + '</strong><span>' +
+            '<span>' + talk.venue + '</span><small>' + talk.location + '</small>' +
+          '</span></li>';
+        }).join('');
+
+        container.setAttribute('aria-label', 'Talk format legend');
+        container.innerHTML =
+          '<div class="talk-legend__item">' +
+            '<span class="talk-legend__dot talk-legend__dot--in-person" aria-hidden="true"></span>' +
+            '<span>In person (' + inPersonTalks.length + ')</span>' +
+          '</div>' +
+          '<details class="virtual-talks">' +
+            '<summary>' +
+              '<span class="talk-legend__dot talk-legend__dot--virtual" aria-hidden="true"></span>' +
+              '<span>Virtual (' + virtualTalks.length + ')</span>' +
+            '</summary>' +
+            '<ul>' + virtualItems + '</ul>' +
+          '</details>' +
+          '<details class="scheduled-talks">' +
+            '<summary>' +
+              '<span class="talk-legend__dot talk-legend__dot--scheduled" aria-hidden="true"></span>' +
+              '<span>Scheduled (' + scheduledTalks.length + ')</span>' +
+            '</summary>' +
+            '<ul>' + scheduledItems + '</ul>' +
+          '</details>';
+
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+        return container;
+      };
+      legend.addTo(map);
 
       document.getElementById('map-summary').textContent =
-        talkLocations.length + ' in-person presentations and discussant appearances, 2019-2026. Virtual events are omitted.';
+        inPersonTalks.length + ' in-person presentations and discussant appearances, plus ' +
+        virtualTalks.length + ' virtual presentations and ' + scheduledTalks.length +
+        ' scheduled presentations, 2019-2026. Purple markers use the host, organizer, or planned venue.';
     </script>
   </body>
 </html>
