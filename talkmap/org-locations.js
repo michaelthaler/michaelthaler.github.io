@@ -1,20 +1,26 @@
-// In-person presentations and discussant appearances listed on Michael Thaler's CV.
-// Virtual events are intentionally omitted. Coordinates use the host city or campus.
+// Presentations and discussant appearances listed on Michael Thaler's CV.
+// Coordinates use the host city or campus. Virtual events use their host,
+// organizer, or originally planned venue, as noted in the location label.
+// Forthcoming events are marked as scheduled.
 var talkLocations = [
   // 2026
   { year: 2026, venue: "ASSA Annual Meeting", location: "Philadelphia, PA, USA", lat: 39.9526, lng: -75.1652 },
   { year: 2026, venue: "LISER Social BEE Workshop", location: "Esch-sur-Alzette, Luxembourg", lat: 49.5009, lng: 5.9803 },
   { year: 2026, venue: "University of Konstanz", location: "Konstanz, Germany", lat: 47.6779, lng: 9.1732 },
   { year: 2026, venue: "Florence Workshop on Behavioral Economics", location: "Florence, Italy", lat: 43.7696, lng: 11.2558 },
-  { year: 2026, venue: "University of Amsterdam", location: "Amsterdam, Netherlands", lat: 52.3676, lng: 4.9041 },
-  { year: 2026, venue: "Tilburg University", location: "Tilburg, Netherlands", lat: 51.5555, lng: 5.0913 },
+  { year: 2026, venue: "University of Amsterdam", location: "Amsterdam, Netherlands", lat: 52.3676, lng: 4.9041, scheduled: true },
+  { year: 2026, venue: "Tilburg University", location: "Tilburg, Netherlands", lat: 51.5555, lng: 5.0913, scheduled: true },
   { year: 2026, venue: "University of Kent", location: "Canterbury, UK", lat: 51.2802, lng: 1.0789 },
-  { year: 2026, venue: "Zurich Psychology and Economics Workshop", location: "Zurich, Switzerland", lat: 47.3769, lng: 8.5417 },
-  { year: 2026, venue: "CREST", location: "Palaiseau, France", lat: 48.7145, lng: 2.2457 },
+  { year: 2026, venue: "Zurich Psychology and Economics Workshop", location: "Zurich, Switzerland", lat: 47.3769, lng: 8.5417, scheduled: true },
+  { year: 2026, venue: "CREST", location: "Palaiseau, France", lat: 48.7145, lng: 2.2457, scheduled: true },
   { year: 2026, venue: "Behavioral Decision Research in Management", location: "New York, NY, USA", lat: 40.7128, lng: -74.006 },
   { year: 2026, venue: "CEPR Workshop on Media, Technology, Politics, and Society", location: "Rome, Italy", lat: 41.9028, lng: 12.4964 },
   { year: 2026, venue: "Early-Career Behavioral Economics Conference", location: "Chicago, IL, USA", lat: 41.8781, lng: -87.6298 },
-  { year: 2026, venue: "ESA Europe", location: "Barcelona, Spain", lat: 41.3874, lng: 2.1686 },
+  { year: 2026, venue: "ESA Europe", location: "Barcelona, Spain", lat: 41.3874, lng: 2.1686, scheduled: true },
+  { year: 2026, venue: "CESifo", location: "Munich, Germany", lat: 48.1351, lng: 11.582, scheduled: true },
+  { year: 2026, venue: "King's College London", location: "London, UK", lat: 51.5074, lng: -0.1278, scheduled: true },
+  { year: 2026, venue: "Yale University", location: "New Haven, CT, USA", lat: 41.3083, lng: -72.9279, scheduled: true },
+  { year: 2026, venue: "University of Pittsburgh", location: "Pittsburgh, PA, USA", lat: 40.4406, lng: -79.9959, scheduled: true },
 
   // 2025
   { year: 2025, venue: "University of British Columbia", location: "Vancouver, BC, Canada", lat: 49.2827, lng: -123.1207 },
@@ -41,7 +47,7 @@ var talkLocations = [
   { year: 2024, venue: "University of Bonn", location: "Bonn, Germany", lat: 50.7374, lng: 7.0982 },
   { year: 2024, venue: "University of Bristol", location: "Bristol, UK", lat: 51.4545, lng: -2.5879 },
   { year: 2024, venue: "Berlin Behavioral Economics", location: "Berlin, Germany", lat: 52.52, lng: 13.405 },
-  { year: 2024, venue: "Middlebury College", location: "Middlebury, VT, USA", lat: 44.0153, lng: -73.1673 },
+  { year: 2024, venue: "Middlebury College", location: "Middlebury, VT, USA (host)", lat: 44.0153, lng: -73.1673, virtual: true },
   { year: 2024, venue: "Economics of Media Bias Workshop", location: "Cologne, Germany", lat: 50.9375, lng: 6.9603 },
   { year: 2024, venue: "London Behavioural Finance Group", location: "London, UK", lat: 51.5074, lng: -0.1278 },
   { year: 2024, venue: "Belief, Identity, and Motivated Reasoning Workshop", location: "London, UK", lat: 51.5074, lng: -0.1278 },
@@ -60,35 +66,42 @@ var talkLocations = [
   { year: 2023, venue: "Workshop on Beliefs, Narratives, and Memory", location: "Herrsching, Germany", lat: 47.9989, lng: 11.1761 },
   { year: 2023, role: "Discussant", venue: "SSRC Workshop on the Economics of Social Media", location: "New York, NY, USA", lat: 40.7128, lng: -74.006 },
 
-  // 2022 — virtual events omitted
-  { year: 2022, venue: "University College London", location: "London, UK", lat: 51.5074, lng: -0.1278 },
-  { year: 2022, venue: "University of Toronto", location: "Toronto, ON, Canada", lat: 43.6532, lng: -79.3832 },
-  { year: 2022, venue: "University of Warwick", location: "Coventry, UK", lat: 52.4068, lng: -1.5197 },
+  // 2022
+  { year: 2022, venue: "University College London", location: "London, UK (host)", lat: 51.5074, lng: -0.1278, virtual: true },
+  { year: 2022, venue: "University of Toronto", location: "Toronto, ON, Canada (host)", lat: 43.6532, lng: -79.3832, virtual: true },
+  { year: 2022, venue: "University of Warwick", location: "Coventry, UK (host)", lat: 52.4068, lng: -1.5197, virtual: true },
   { year: 2022, venue: "HEC Paris", location: "Jouy-en-Josas, France", lat: 48.7591, lng: 2.1691 },
-  { year: 2022, venue: "University of Exeter", location: "Exeter, UK", lat: 50.7184, lng: -3.5339 },
+  { year: 2022, venue: "University of Exeter", location: "Exeter, UK (host)", lat: 50.7184, lng: -3.5339, virtual: true },
   { year: 2022, venue: "University of Nottingham", location: "Nottingham, UK", lat: 52.9548, lng: -1.1581 },
   { year: 2022, venue: "Imperial College London", location: "London, UK", lat: 51.5074, lng: -0.1278 },
+  { year: 2022, venue: "VEAEBES Seminar", location: "Osaka, Japan (organizer)", lat: 34.6937, lng: 135.5023, virtual: true },
+  { year: 2022, venue: "ASSA Annual Meeting", location: "Boston, MA, USA (planned venue)", lat: 42.3601, lng: -71.0589, virtual: true },
   { year: 2022, venue: "NBER Summer Institute: Political Economy", location: "Cambridge, MA, USA", lat: 42.3736, lng: -71.1097 },
   { year: 2022, venue: "SITE: Psychology and Economics", location: "Stanford, CA, USA", lat: 37.4275, lng: -122.1697 },
+  { year: 2022, venue: "LACEA BRAIN Conference", location: "Montevideo, Uruguay (organizer)", lat: -34.9011, lng: -56.1645, virtual: true },
   { year: 2022, venue: "Advances with Field Experiments", location: "Chicago, IL, USA", lat: 41.8781, lng: -87.6298 },
   { year: 2022, venue: "ESA Europe", location: "Bologna, Italy", lat: 44.4949, lng: 11.3426 },
 
-  // 2021 — virtual events omitted
-  { year: 2021, venue: "UC Berkeley Haas", location: "Berkeley, CA, USA", lat: 37.8715, lng: -122.273 },
-  { year: 2021, venue: "University of Michigan", location: "Ann Arbor, MI, USA", lat: 42.2808, lng: -83.743 },
-  { year: 2021, venue: "Purdue University", location: "West Lafayette, IN, USA", lat: 40.4259, lng: -86.9081 },
+  // 2021
+  { year: 2021, venue: "UC Berkeley Haas", location: "Berkeley, CA, USA (host)", lat: 37.8715, lng: -122.273, virtual: true },
+  { year: 2021, venue: "University of Michigan", location: "Ann Arbor, MI, USA (host)", lat: 42.2808, lng: -83.743, virtual: true },
+  { year: 2021, venue: "Purdue University", location: "West Lafayette, IN, USA (host)", lat: 40.4259, lng: -86.9081, virtual: true },
   { year: 2021, venue: "Princeton University", location: "Princeton, NJ, USA", lat: 40.3573, lng: -74.6672 },
   { year: 2021, venue: "University of Nottingham", location: "Nottingham, UK", lat: 52.9548, lng: -1.1581 },
   { year: 2021, venue: "University of Amsterdam Belief-Based Utility Workshop", location: "Amsterdam, Netherlands", lat: 52.3676, lng: 4.9041 },
   { year: 2021, venue: "Maastricht M-BEES", location: "Maastricht, Netherlands", lat: 50.8514, lng: 5.691 },
+  { year: 2021, venue: "SWEET Workshop", location: "New York, NY, USA (host)", lat: 40.7128, lng: -74.006, virtual: true },
 
-  // 2020 — virtual events omitted
+  // 2020
   { year: 2020, venue: "Stanford University", location: "Stanford, CA, USA", lat: 37.4275, lng: -122.1697 },
   { year: 2020, venue: "Carnegie Mellon University", location: "Pittsburgh, PA, USA", lat: 40.4406, lng: -79.9959 },
   { year: 2020, venue: "Sciences Po", location: "Paris, France", lat: 48.8566, lng: 2.3522 },
   { year: 2020, venue: "Paris School of Economics", location: "Paris, France", lat: 48.8566, lng: 2.3522 },
   { year: 2020, venue: "Harvard University", location: "Cambridge, MA, USA", lat: 42.3736, lng: -71.1097 },
   { year: 2020, venue: "Princeton University", location: "Princeton, NJ, USA", lat: 40.3573, lng: -74.6672 },
+  { year: 2020, venue: "APSA Annual Meeting", location: "San Francisco, CA, USA (planned venue)", lat: 37.7749, lng: -122.4194, virtual: true },
+  { year: 2020, venue: "SWEET Workshop", location: "Princeton, NJ, USA (host)", lat: 40.3573, lng: -74.6672, virtual: true },
+  { year: 2020, venue: "ANZWEE Workshop", location: "Melbourne, Australia (host)", lat: -37.8136, lng: 144.9631, virtual: true },
 
   // 2019
   { year: 2019, venue: "Harvard University", location: "Cambridge, MA, USA", lat: 42.3736, lng: -71.1097 },
