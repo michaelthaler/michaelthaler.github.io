@@ -1,16 +1,17 @@
 (function () {
   const CONFIG = {
-    boardRadius: 4,
-    baseEnergy: 2,
+    boardRadius: 5,
+    baseEnergy: 3,
     moveCost: 1,
+    exploreCost: 1,
     exploitCost: 1,
     teaBonus: 2,
     logLength: 10,
     logBuffer: 36,
     hexSize: 42,
     players: [
-      { name: "Player A", short: "A", color: "#ef7d5c" },
-      { name: "Player B", short: "B", color: "#7cd1c1" }
+      { name: "Cat", pawnSymbol: "cat", color: "#ef7d5c" },
+      { name: "Train", pawnSymbol: "train", color: "#7cd1c1" }
     ]
   };
 
@@ -25,17 +26,21 @@
 
   const RESOURCE_INFO = {
     base: {
-      label: "Camp",
-      short: "HQ",
+      label: "House",
+      short: "HOME",
       subLabel: "start",
-      description: "The shared starting camp. Pawns begin here and this hex cannot be exploited."
+      description: "The shared starting house. Cat and Train begin here, and this hex cannot be exploited."
     },
     scene: {
       label: "Destination",
       short: "VP",
-      subLabel: "score",
+      subLabel: "draw",
       description: function (tile) {
-        return "Exploit this destination for " + scenePoints(tile) + " VP.";
+        return (
+          "The first icon points to the " +
+          VP_ICON_INFO[tile.vpDeckIcon].name +
+          " deck. Exploit this destination to draw its top VP card."
+        );
       }
     },
     tea: {
@@ -56,19 +61,59 @@
       subLabel: "unlock",
       description: "Exploit this hex to unlock the next ring for that player."
     },
+    airplane: {
+      label: "Airplane",
+      short: "AIR",
+      subLabel: "fly ≤5",
+      description: "Exploit this hex to take an optional free flight to any unlocked hex up to 5 hexes away."
+    },
     endgame: {
       label: "End Game",
       short: "END",
-      subLabel: "finish",
-      description: "Exploit this hex to claim one of the two end game spaces. When both are exploited, the game ends."
+      subLabel: "countdown",
+      description: "Revealing the first Cat starts the final-turn countdown. Exploiting both Cats ends the game immediately."
     }
   };
 
+  const RESOURCE_SYMBOL_IDS = {
+    base: "house",
+    scene: "mountain",
+    tea: "tea",
+    spy: "magnifier",
+    study: "book",
+    airplane: "airplane",
+    endgame: "cat"
+  };
+
   const RING_DISTRIBUTIONS = {
-    1: { scene: 1, tea: 1, spy: 2, study: 2 },
-    2: { scene: 3, tea: 3, spy: 3, study: 3 },
-    3: { scene: 5, tea: 5, spy: 4, study: 4 },
-    4: { scene: 10, tea: 6, spy: 6, study: 0, endgame: 2 }
+    1: { scene: 1, tea: 1, spy: 1, study: 1 },
+    2: { scene: 2, tea: 2, spy: 2, study: 2, airplane: 1 },
+    3: { scene: 3, tea: 4, spy: 3, study: 4, airplane: 1 },
+    4: { scene: 4, tea: 5, spy: 4, study: 4, airplane: 1 },
+    5: { scene: 4, tea: 3, spy: 2, study: 0, airplane: 1, endgame: 2 }
+  };
+
+  const FIXED_BOARD_ROWS = {
+    "-5": [1, 4],
+    "-4": [-1, 0, 1, 3, 4, 5],
+    "-3": [-1, 0, 1, 2, 4],
+    "-2": [-1, 1, 2, 3],
+    "-1": [-4, -3, -2, -1, 0, 2, 3, 4, 5],
+    0: [-4, -2, -1, 0, 1, 3, 4],
+    1: [-5, -4, -3, -2, 0, 1, 2, 3, 4],
+    2: [-3, -1, 0, 1],
+    3: [-4, -3, -2, -1, 1],
+    4: [-5, -4, -3, -1, 0, 1],
+    5: [-4, -1]
+  };
+
+  const VP_ICONS = ["M", "W", "H", "B"];
+
+  const VP_ICON_INFO = {
+    M: { name: "Mountain", symbol: "mountain" },
+    W: { name: "Water", symbol: "water" },
+    H: { name: "History", symbol: "history" },
+    B: { name: "Building", symbol: "gherkin" }
   };
 
   const DESTINATION_POOL = buildDestinationPool();
@@ -90,9 +135,12 @@
     dom.seedValue = document.getElementById("seedValue");
     dom.endgameValue = document.getElementById("endgameValue");
     dom.distributionList = document.getElementById("distributionList");
+    dom.vpDeckList = document.getElementById("vpDeckList");
+    dom.exploreButton = document.getElementById("exploreButton");
     dom.exploitButton = document.getElementById("exploitButton");
     dom.endTurnButton = document.getElementById("endTurnButton");
     dom.skipSpyButton = document.getElementById("skipSpyButton");
+    dom.skipFlightButton = document.getElementById("skipFlightButton");
     dom.resetButton = document.getElementById("resetButton");
     dom.regenerateButton = document.getElementById("regenerateButton");
     dom.privacyOverlay = document.getElementById("privacyOverlay");
@@ -101,9 +149,11 @@
     dom.overlayButton = document.getElementById("overlayButton");
 
     dom.board.addEventListener("click", onBoardClick);
+    dom.exploreButton.addEventListener("click", exploreCurrentHex);
     dom.exploitButton.addEventListener("click", exploitCurrentHex);
     dom.endTurnButton.addEventListener("click", endTurn);
     dom.skipSpyButton.addEventListener("click", skipSpy);
+    dom.skipFlightButton.addEventListener("click", skipFlight);
     dom.resetButton.addEventListener("click", resetGame);
     dom.regenerateButton.addEventListener("click", regenerateBoard);
     dom.overlayButton.addEventListener("click", beginTurn);
@@ -118,11 +168,13 @@
       return {
         id: index,
         name: player.name,
-        short: player.short,
+        pawnSymbol: player.pawnSymbol,
         color: player.color,
         position: "0,0",
         vp: 0,
-        bonusEnergy: 0,
+        vpCards: [],
+        iconCounts: emptyIconCounts(),
+        bonusEnergy: index === 1 ? 1 : 0,
         unlockedRing: 1
       };
     });
@@ -132,19 +184,27 @@
       tiles: generated.tiles,
       tilesById: generated.tilesById,
       viewBox: generated.viewBox,
+      vpDecks: generated.vpDecks,
       currentPlayer: 0,
       totalTurns: 1,
       energy: CONFIG.baseEnergy,
       pendingSpy: null,
+      pendingFlight: null,
       awaitingHandoff: false,
-      hasExploited: false,
       gameOver: false,
+      gameEndReason: "",
       finalMessage: "",
+      endgameCountdown: null,
       selectedTileId: "0,0",
       players: players,
       logEntries: [
         logEntry(
-          "Player A begins at the camp with 2 energy. Private reveals stay hidden until exploited or known by both players."
+          players[0].name +
+            " begins at the house with " +
+            CONFIG.baseEnergy +
+            " energy. " +
+            players[1].name +
+            " receives 1 compensating energy on the second player's first turn."
         )
       ]
     };
@@ -152,24 +212,20 @@
 
   function generateBoard(seed) {
     const rng = mulberry32(seed);
-    const tiles = [];
     const tilesById = {};
     const radius = CONFIG.boardRadius;
 
-    for (let q = -radius; q <= radius; q += 1) {
-      const minR = Math.max(-radius, -q - radius);
-      const maxR = Math.min(radius, -q + radius);
-      for (let r = minR; r <= maxR; r += 1) {
-        const tile = createTile(q, r);
-        tiles.push(tile);
-        tilesById[tile.id] = tile;
-      }
-    }
+    const tiles = fixedBoardCoordinates().map(function (coordinate) {
+      const tile = createTile(coordinate.q, coordinate.r);
+      tilesById[tile.id] = tile;
+      return tile;
+    });
 
     const centerTile = tilesById["0,0"];
     centerTile.kind = "base";
     centerTile.publicRevealed = true;
     centerTile.knownBy = [true, true];
+    centerTile.exploredBy = [true, true];
 
     for (let ring = 1; ring <= radius; ring += 1) {
       const ringTiles = tiles.filter(function (tile) {
@@ -184,6 +240,7 @@
     }
 
     assignTileDetails(tiles, rng);
+    const vpDecks = buildVpDecks(rng);
 
     const margin = CONFIG.hexSize + 48;
     let minX = Infinity;
@@ -209,7 +266,16 @@
       maxY - minY + margin * 2
     ].join(" ");
 
-    return { tiles: tiles, tilesById: tilesById, viewBox: viewBox };
+    return { tiles: tiles, tilesById: tilesById, viewBox: viewBox, vpDecks: vpDecks };
+  }
+
+  function fixedBoardCoordinates() {
+    return Object.keys(FIXED_BOARD_ROWS).flatMap(function (rKey) {
+      const r = Number(rKey);
+      return FIXED_BOARD_ROWS[rKey].map(function (q) {
+        return { q: q, r: r };
+      });
+    });
   }
 
   function createTile(q, r) {
@@ -221,12 +287,14 @@
       kind: "scene",
       publicRevealed: false,
       knownBy: [false, false],
+      exploredBy: [false, false],
       exploitedBy: [false, false],
       discoveredBy: null,
       firstExploitedBy: null,
       isEndgame: false,
       destination: null,
-      vpValue: null,
+      vpDeckIcon: null,
+      vpCardsByPlayer: [null, null],
       x: 0,
       y: 0,
       points: ""
@@ -251,7 +319,15 @@
     const deck = buildDestinationDeck(sceneTiles.length, rng);
     sceneTiles.forEach(function (tile, index) {
       tile.destination = deck[index];
-      tile.vpValue = 2 + Math.floor(rng() * 4);
+    });
+
+    const firstIconBag = [];
+    sceneTiles.forEach(function (_tile, index) {
+      firstIconBag.push(VP_ICONS[index % VP_ICONS.length]);
+    });
+    shuffle(firstIconBag, rng);
+    sceneTiles.forEach(function (tile, index) {
+      tile.vpDeckIcon = firstIconBag[index];
     });
 
     tiles.forEach(function (tile) {
@@ -273,6 +349,67 @@
     return deck.slice(0, count);
   }
 
+  function buildVpDecks(rng) {
+    const decks = {};
+    const pairCards = [];
+
+    VP_ICONS.forEach(function (icon) {
+      decks[icon] = [];
+      for (let copy = 1; copy <= 4; copy += 1) {
+        decks[icon].push(createVpCard(icon + copy, [icon]));
+      }
+    });
+
+    for (let firstIndex = 0; firstIndex < VP_ICONS.length; firstIndex += 1) {
+      for (let secondIndex = firstIndex + 1; secondIndex < VP_ICONS.length; secondIndex += 1) {
+        const first = VP_ICONS[firstIndex];
+        const second = VP_ICONS[secondIndex];
+        pairCards.push(createVpCard(first + second, [first, second]));
+        pairCards.push(createVpCard(second + first, [second, first]));
+      }
+    }
+
+    const assignments = assignPairCardsToDecks(pairCards, rng);
+    pairCards.forEach(function (card, index) {
+      decks[assignments[index]].push(card);
+    });
+
+    VP_ICONS.forEach(function (icon) {
+      shuffle(decks[icon], rng);
+    });
+
+    return decks;
+  }
+
+  function assignPairCardsToDecks(pairCards, rng) {
+    for (let attempt = 0; attempt < 5000; attempt += 1) {
+      const counts = emptyIconCounts();
+      const assignments = pairCards.map(function (card) {
+        const assignedIcon = card.icons[rng() < 0.5 ? 0 : 1];
+        counts[assignedIcon] += 1;
+        return assignedIcon;
+      });
+
+      if (
+        VP_ICONS.every(function (icon) {
+          return counts[icon] === 3;
+        })
+      ) {
+        return assignments;
+      }
+    }
+
+    throw new Error("Unable to balance the VP pair cards across the four decks.");
+  }
+
+  function createVpCard(id, icons) {
+    return { id: id, icons: icons.slice() };
+  }
+
+  function emptyIconCounts() {
+    return { M: 0, W: 0, H: 0, B: 0 };
+  }
+
   function onBoardClick(event) {
     if (state.awaitingHandoff || state.gameOver) {
       return;
@@ -285,6 +422,15 @@
 
     const tileId = tileGroup.getAttribute("data-tile-id");
     const tile = getTile(tileId);
+
+    if (state.pendingFlight && canFlyTo(tile)) {
+      flyTo(tile);
+      return;
+    }
+
+    if (state.pendingFlight) {
+      return;
+    }
 
     if (state.pendingSpy && canUseSpyOn(tile)) {
       revealWithSpy(tile);
@@ -308,12 +454,45 @@
     state.energy -= CONFIG.moveCost;
     state.selectedTileId = tile.id;
 
-    addLog(player.name + " moved from " + formatHex(previous) + " to " + formatHex(tile) + ".");
+    addLog(
+      player.name +
+        " spent " +
+        CONFIG.moveCost +
+        " energy to move from " +
+        formatHex(previous) +
+        " to " +
+        formatHex(tile) +
+        "."
+    );
 
-    if (!isVisibleToPlayer(tile, player.id)) {
-      addLog(player.name + " explored a previously hidden hex at " + formatHex(tile) + ".");
+    render();
+  }
+
+  function exploreCurrentHex() {
+    if (!canExploreCurrentHex()) {
+      return;
+    }
+
+    const player = currentPlayer();
+    const tile = currentTile();
+    const wasVisible = isVisibleToPlayer(tile, player.id);
+
+    state.energy -= CONFIG.exploreCost;
+    tile.exploredBy[player.id] = true;
+    state.selectedTileId = tile.id;
+
+    addLog(
+      player.name +
+        " spent " +
+        CONFIG.exploreCost +
+        " energy to explore " +
+        formatHex(tile) +
+        "."
+    );
+
+    if (!wasVisible) {
       const outcome = revealTileForPlayer(tile, player.id);
-      addRevealLogs(tile, outcome, "moved onto");
+      addRevealLogs(tile, outcome, "discovered");
     }
 
     render();
@@ -330,7 +509,6 @@
     const wasUnexploited = !hasAnyExploitation(tile);
 
     state.energy -= CONFIG.exploitCost;
-    state.hasExploited = true;
     tile.exploitedBy[player.id] = true;
     if (tile.firstExploitedBy === null) {
       tile.firstExploitedBy = player.id;
@@ -349,9 +527,7 @@
     }
 
     if (tile.kind === "scene") {
-      const points = scenePoints(tile);
-      player.vp += points;
-      addLog(player.name + " captured a scenic wonder for " + points + " VP.");
+      drawVpCard(player, tile);
     }
 
     if (tile.kind === "tea") {
@@ -364,8 +540,20 @@
         player.unlockedRing += 1;
         addLog(player.name + " unlocked ring " + player.unlockedRing + ".");
       } else {
-        player.vp += 2;
-        addLog(player.name + " was already at max range, so the study became 2 VP instead.");
+        addLog(player.name + " was already at maximum range, so the study had no further effect.");
+      }
+    }
+
+    if (tile.kind === "airplane") {
+      const flightTargets = getFlightTargets(tile);
+      if (flightTargets.length > 0) {
+        state.pendingFlight = { sourceTileId: tile.id };
+        addLog(
+          player.name +
+            " activated an airplane and may fly for free to an unlocked hex up to 5 hexes away."
+        );
+      } else {
+        addLog(player.name + " found no legal destination for the airplane.");
       }
     }
 
@@ -383,7 +571,7 @@
     if (tile.isEndgame) {
       addLog(
         player.name +
-          (wasUnexploited ? " exploited one of the endgame hexes (" : " re-exploited an endgame hex (") +
+          (wasUnexploited ? " exploited one of the Cat hexes (" : " re-exploited a Cat hex (") +
           countExploitedEndgameTiles() +
           "/2)."
       );
@@ -391,6 +579,33 @@
 
     finalizeGameIfNeeded();
     render();
+  }
+
+  function drawVpCard(player, tile) {
+    const deck = state.vpDecks[tile.vpDeckIcon];
+    const card = deck.shift();
+
+    if (!card) {
+      return;
+    }
+
+    player.vpCards.push(card);
+    tile.vpCardsByPlayer[player.id] = card;
+    card.icons.forEach(function (icon) {
+      player.iconCounts[icon] += 1;
+    });
+    player.vp = vpScore(player.iconCounts);
+
+    addLog(
+      player.name +
+        " drew " +
+        vpCardCode(card) +
+        " from the " +
+        VP_ICON_INFO[tile.vpDeckIcon].name +
+        " deck and now has " +
+        player.vp +
+        " VP."
+    );
   }
 
   function revealWithSpy(tile) {
@@ -412,16 +627,67 @@
     render();
   }
 
-  function endTurn() {
-    if (state.pendingSpy || state.awaitingHandoff || state.gameOver) {
+  function flyTo(tile) {
+    if (!canFlyTo(tile)) {
       return;
     }
 
+    const player = currentPlayer();
+    const source = getTile(state.pendingFlight.sourceTileId);
+    player.position = tile.id;
+    state.selectedTileId = tile.id;
+    state.pendingFlight = null;
+
+    addLog(
+      player.name +
+        " flew from " +
+        formatHex(source) +
+        " to " +
+        formatHex(tile) +
+        " for no additional energy."
+    );
+    render();
+  }
+
+  function skipFlight() {
+    if (!state.pendingFlight || state.awaitingHandoff || state.gameOver) {
+      return;
+    }
+
+    state.pendingFlight = null;
+    addLog(currentPlayer().name + " declined the airplane flight.");
+    render();
+  }
+
+  function endTurn() {
+    if (state.pendingSpy || state.pendingFlight || state.awaitingHandoff || state.gameOver) {
+      return;
+    }
+
+    const endingPlayerIndex = state.currentPlayer;
     const endingPlayer = currentPlayer();
+    addLog(endingPlayer.name + " ended the turn.");
+
+    if (state.endgameCountdown) {
+      if (
+        state.endgameCountdown.revealingTurnPending &&
+        state.endgameCountdown.revealerId === endingPlayerIndex
+      ) {
+        state.endgameCountdown.revealingTurnPending = false;
+      } else if (state.endgameCountdown.turnsRemaining[endingPlayerIndex] > 0) {
+        state.endgameCountdown.turnsRemaining[endingPlayerIndex] -= 1;
+      }
+
+      if (state.endgameCountdown.turnsRemaining.every(function (turns) { return turns === 0; })) {
+        finishGame("countdown", "The Cat countdown expired. The game ends after both final-turn allowances were used.");
+        render();
+        return;
+      }
+    }
+
     const nextPlayerIndex = 1 - state.currentPlayer;
     state.currentPlayer = nextPlayerIndex;
     state.totalTurns += 1;
-    state.hasExploited = false;
     state.awaitingHandoff = true;
 
     const nextPlayer = currentPlayer();
@@ -430,13 +696,12 @@
     nextPlayer.bonusEnergy = 0;
     state.selectedTileId = nextPlayer.position;
 
-    addLog(endingPlayer.name + " ended the turn.");
     addLog(
       nextPlayer.name +
         " begins with " +
         state.energy +
         " energy" +
-        (queuedEnergy > 0 ? " (" + CONFIG.baseEnergy + " base plus " + queuedEnergy + " tea)." : ".")
+        (queuedEnergy > 0 ? " (" + CONFIG.baseEnergy + " base plus " + queuedEnergy + " bonus)." : ".")
     );
 
     render();
@@ -464,6 +729,7 @@
   function render() {
     renderTurnChip();
     renderScoreboard();
+    renderVpDecks();
     renderDistribution();
     renderBoard();
     renderButtons();
@@ -473,7 +739,7 @@
     renderOverlay();
     dom.energyValue.textContent = String(state.energy);
     dom.seedValue.textContent = "Seed " + state.seed;
-    dom.endgameValue.textContent = "Endgame " + countExploitedEndgameTiles() + "/2";
+    dom.endgameValue.textContent = endgameStatusText();
   }
 
   function renderTurnChip() {
@@ -484,7 +750,10 @@
       dom.turnChip.innerHTML =
         "<strong>Game Over</strong><br>" +
         state.finalMessage +
-        "<br>Endgame hexes exploited: 2 of 2";
+        "<br>" +
+        (state.gameEndReason === "countdown"
+          ? "Cat countdown expired"
+          : "Both Cats were exploited");
       return;
     }
 
@@ -498,9 +767,8 @@
       player.unlockedRing +
       " of " +
       CONFIG.boardRadius +
-      "<br>Endgame " +
-      countExploitedEndgameTiles() +
-      "/2";
+      "<br>" +
+      endgameStatusText();
   }
 
   function renderScoreboard() {
@@ -533,9 +801,16 @@
           player.vp +
           " VP</div>" +
           "</div>" +
+          renderIconCounts(player.iconCounts) +
           '<div class="score-rows">' +
+          scoreRow(
+            "VP Cards",
+            player.vpCards.length > 0
+              ? player.vpCards.map(vpCardCode).join(" · ")
+              : "—"
+          ) +
           scoreRow("Ring Access", "1-" + player.unlockedRing) +
-          scoreRow("Next Turn Tea", "+" + player.bonusEnergy) +
+          scoreRow("Next Turn Bonus", "+" + player.bonusEnergy) +
           scoreRow("Current Hex", visibleTileName(tile, viewerId)) +
           scoreRow("Position", formatHex(tile)) +
           "</div>" +
@@ -543,6 +818,41 @@
         );
       })
       .join("");
+  }
+
+  function renderIconCounts(iconCounts) {
+    return (
+      '<div class="score-icons" aria-label="VP icon counts">' +
+      VP_ICONS.map(function (icon) {
+        return (
+          '<span class="score-icon-count">' +
+          vpIconMarkup(icon) +
+          '<strong aria-label="' +
+          VP_ICON_INFO[icon].name +
+          ' count">' +
+          iconCounts[icon] +
+          "</strong></span>"
+        );
+      }).join("") +
+      "</div>"
+    );
+  }
+
+  function renderVpDecks() {
+    dom.vpDeckList.innerHTML = VP_ICONS.map(function (icon) {
+      const deck = state.vpDecks[icon];
+      return (
+        '<article class="vp-deck-card vp-deck-card--' +
+        icon.toLowerCase() +
+        '">' +
+        vpIconMarkup(icon) +
+        '<div><strong>' +
+        VP_ICON_INFO[icon].name +
+        '</strong><span>' +
+        deck.length +
+        " of 7 cards left</span></div></article>"
+      );
+    }).join("");
   }
 
   function renderBoard() {
@@ -559,13 +869,21 @@
         return tile.id;
       })
     );
+    const flightTargets = state.pendingFlight
+      ? getFlightTargets(getTile(state.pendingFlight.sourceTileId))
+      : [];
+    const flightTargetIds = new Set(
+      flightTargets.map(function (tile) {
+        return tile.id;
+      })
+    );
     const currentTileId = currentPlayer().position;
     const currentUnlockedRing = currentPlayer().unlockedRing;
 
     const tileMarkup = state.tiles
       .map(function (tile) {
         const visible = isVisibleToPlayer(tile, viewerId);
-        const classes = ["hex-tile", "resource-" + tile.kind];
+        const classes = ["hex-tile", "resource-" + tile.kind, "ring-" + tile.ring];
 
         if (!visible) {
           classes.push("is-hidden");
@@ -597,6 +915,9 @@
         if (spyTargetIds.has(tile.id) && !state.awaitingHandoff && !state.gameOver) {
           classes.push("is-spy-target");
         }
+        if (flightTargetIds.has(tile.id) && !state.awaitingHandoff && !state.gameOver) {
+          classes.push("is-flight-target");
+        }
 
         return (
           '<g class="' +
@@ -618,11 +939,11 @@
           '<text class="tile-sub" x="' +
           tile.x +
           '" y="' +
-          (tile.y + 15) +
+          (tile.y + (visible ? 32 : 15)) +
           '">' +
           tileSubLabel(tile, viewerId, currentUnlockedRing) +
           "</text>" +
-          renderEndgameGlyph(tile, visible) +
+          renderResourceSymbol(tile, visible) +
           renderDiscoveryMarker(tile, visible) +
           "</g>"
         );
@@ -630,35 +951,84 @@
       .join("");
 
     dom.board.setAttribute("viewBox", state.viewBox);
-    dom.board.innerHTML = tileMarkup + renderPawns();
+    dom.board.innerHTML = renderResourceSymbolDefs() + tileMarkup + renderPawns();
     dom.actionHint.textContent = actionHint();
   }
 
-  function renderEndgameGlyph(tile, visible) {
-    if (!tile.isEndgame || !visible) {
+  function renderResourceSymbol(tile, visible) {
+    if (!visible) {
       return "";
     }
 
-    const x = tile.x - 18;
-    const y = tile.y - 18;
+    const isDestination = tile.kind === "scene";
+    const symbolId = isDestination
+      ? VP_ICON_INFO[tile.vpDeckIcon].symbol
+      : RESOURCE_SYMBOL_IDS[tile.kind];
+    const symbolLabel = isDestination
+      ? VP_ICON_INFO[tile.vpDeckIcon].name + " deck"
+      : RESOURCE_INFO[tile.kind].label;
     return (
-      '<polygon class="endgame-glyph" points="' +
-      x +
-      "," +
-      y +
-      " " +
-      (x + 7) +
-      "," +
-      (y - 7) +
-      " " +
-      (x + 14) +
-      "," +
-      y +
-      " " +
-      (x + 7) +
-      "," +
-      (y + 7) +
-      '"></polygon>'
+      '<g class="tile-symbol tile-symbol--' +
+      symbolId +
+      '" aria-label="' +
+      symbolLabel +
+      ' symbol">' +
+      '<circle class="tile-symbol-badge" cx="' +
+      tile.x +
+      '" cy="' +
+      (tile.y + 11) +
+      '" r="11"></circle>' +
+      '<use class="tile-symbol-icon" href="#symbol-' +
+      symbolId +
+      '" x="' +
+      (tile.x - 8) +
+      '" y="' +
+      (tile.y + 3) +
+      '" width="16" height="16"></use>' +
+      "</g>"
+    );
+  }
+
+  function renderResourceSymbolDefs() {
+    return (
+      "<defs>" +
+      '<symbol id="symbol-cat" viewBox="0 0 24 24">' +
+      '<path d="M5 8 3.2 4.5 7.3 6.2A10.8 10.8 0 0 1 12 5.1a10.8 10.8 0 0 1 4.7 1.1l4.1-1.7L19 8v5.3c0 4.4-2.9 7.2-7 7.2s-7-2.8-7-7.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/>' +
+      '<path d="m10 16 2-1 2 1M12 15v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-airplane" viewBox="0 0 24 24">' +
+      '<path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5Z" fill="currentColor"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-mountain" viewBox="0 0 24 24">' +
+      '<path d="m2.5 20 7.1-13 3.1 5 2.2-3.4L21.5 20Zm4.6-5.1 2.5-4.6 2.2 3.6-1.7 2-1.4-1.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-water" viewBox="0 0 24 24">' +
+      '<path d="M3 7c3-2.2 5.9 2.2 9 0s6 2.2 9 0M3 12c3-2.2 5.9 2.2 9 0s6 2.2 9 0M3 17c3-2.2 5.9 2.2 9 0s6 2.2 9 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-history" viewBox="0 0 24 24">' +
+      '<path d="M7 5V3h11a2 2 0 0 1 2 2v13H8a3 3 0 0 0-3 3V5a2 2 0 0 1 2-2h1m0 15h12v3H8a3 3 0 1 1 0-6h9V6H8m2 4h5m-5 3h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-gherkin" viewBox="0 0 24 24">' +
+      '<path d="M12 2c4.3 2.8 6.2 7 6.2 12.2V21H5.8v-6.8C5.8 9 7.7 4.8 12 2Zm-5.7 8.3h11.4M6 15.2h12M9 4.7l8.7 10.5M15 4.7 6.3 15.2M12 2v19" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-tea" viewBox="0 0 24 24">' +
+      '<path d="M5 9h11v5.2A4.8 4.8 0 0 1 11.2 19H9.8A4.8 4.8 0 0 1 5 14.2Zm11 1h1.5a2.5 2.5 0 0 1 0 5H16M4 21h14M8 6c-1.2-1.2 1.2-2.2 0-3.5M12 6c-1.2-1.2 1.2-2.2 0-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-magnifier" viewBox="0 0 24 24">' +
+      '<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/>' +
+      '<path d="m15.3 15.3 5.2 5.2" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-book" viewBox="0 0 24 24">' +
+      '<path d="M3 5.5c3.5-.8 6.5-.1 9 2.2v12c-2.5-2.3-5.5-3-9-2.2Zm18 0c-3.5-.8-6.5-.1-9 2.2v12c2.5-2.3 5.5-3 9-2.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-house" viewBox="0 0 24 24">' +
+      '<path d="m3 11 9-8 9 8v10h-6v-6H9v6H3Zm3-3V4h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      '<symbol id="symbol-train" viewBox="0 0 24 24">' +
+      '<path d="M7 3h10a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm-3 7h16M8 7h3m2 0h3M8 18l-2 3m10-3 2 3M8 14h.01M16 14h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      "</symbol>" +
+      "</defs>"
     );
   }
 
@@ -728,7 +1098,9 @@
         return (
           '<g class="pawn' +
           (!state.gameOver && player.id === state.currentPlayer ? " pawn--active" : "") +
-          '">' +
+          '" aria-label="' +
+          player.name +
+          ' pawn">' +
           '<ellipse class="pawn-shadow" cx="' +
           (tile.x + offset) +
           '" cy="' +
@@ -741,13 +1113,13 @@
           '" r="13" fill="' +
           player.color +
           '"></circle>' +
-          '<text x="' +
-          (tile.x + offset) +
+          '<use class="pawn-icon" href="#symbol-' +
+          player.pawnSymbol +
+          '" x="' +
+          (tile.x + offset - 8) +
           '" y="' +
-          (tile.y + 8) +
-          '">' +
-          player.short +
-          "</text>" +
+          tile.y +
+          '" width="16" height="16"></use>' +
           "</g>"
         );
       })
@@ -756,10 +1128,13 @@
 
   function renderButtons() {
     const blocked = state.awaitingHandoff || state.gameOver;
+    dom.exploreButton.disabled = blocked || !canExploreCurrentHex();
     dom.exploitButton.disabled = blocked || !canExploitCurrentHex();
-    dom.endTurnButton.disabled = blocked || !!state.pendingSpy;
+    dom.endTurnButton.disabled = blocked || !!state.pendingSpy || !!state.pendingFlight;
     dom.skipSpyButton.hidden = !state.pendingSpy;
     dom.skipSpyButton.disabled = blocked || !state.pendingSpy;
+    dom.skipFlightButton.hidden = !state.pendingFlight;
+    dom.skipFlightButton.disabled = blocked || !state.pendingFlight;
   }
 
   function renderTileDetail() {
@@ -776,11 +1151,26 @@
       tags.push(tag("Known privately to you"));
     }
 
+    if (
+      selected.id === currentPlayer().position &&
+      selected.kind !== "base" &&
+      !hasPlayerExploredTile(selected, viewerId)
+    ) {
+      tags.push(tag("Explore this hex for 1 energy"));
+    }
+
     if (visible && selected.kind !== "base") {
       if (hasPlayerExploitedTile(selected, viewerId)) {
         tags.push(tag("You already exploited this"));
+      } else if (
+        selected.kind === "scene" &&
+        state.vpDecks[selected.vpDeckIcon].length === 0
+      ) {
+        tags.push(tag(VP_ICON_INFO[selected.vpDeckIcon].name + " deck empty"));
+      } else if (hasPlayerExploredTile(selected, viewerId)) {
+        tags.push(tag("Explored by you — ready to exploit"));
       } else {
-        tags.push(tag("You can still exploit this"));
+        tags.push(tag("Already known — no Explore needed"));
       }
     }
 
@@ -790,6 +1180,17 @@
 
     if (selected.isEndgame && visible) {
       tags.push(tag("Endgame hex"));
+    }
+
+    if (state.pendingFlight && canFlyTo(selected)) {
+      const source = getTile(state.pendingFlight.sourceTileId);
+      tags.push(
+        tag(
+          "Free flight destination · " +
+            hexDistance(selected.q, selected.r, source.q, source.r) +
+            " hexes"
+        )
+      );
     }
 
     if (visible && selected.discoveredBy !== null) {
@@ -838,17 +1239,23 @@
   function renderNotes() {
     const player = currentPlayer();
     let note =
-      "Each turn starts with 2 base energy. Move costs 1, exploit costs 1, tea adds 2 next turn, and each player can exploit each hex once. Dashed borders mark information only the active player knows.";
+      "Each turn starts with 3 base energy. Train gets 1 extra energy on the second player's first turn. Move, Explore, and Exploit are separate actions that each cost 1 energy, and any of them may be repeated while energy remains. Explore reveals an unknown hex underfoot; a destination's first icon identifies its VP deck. Exploit that destination to draw the deck's top card. Final VP is M² + W² + H² + B² + max² + min². Each player can exploit each individual hex once. Tea adds 2 energy next turn. Airplanes offer an optional free flight of up to 5 hexes within unlocked rings. Dashed borders mark information only the active player knows.";
 
     if (state.gameOver) {
       dom.phaseNote.textContent =
         note +
-        " Both endgame hexes have been exploited, so the expedition is over. Hidden tiles remain hidden unless both players had already seen them.";
+        " " +
+        (state.gameEndReason === "countdown"
+          ? "The final-turn countdown expired."
+          : "Both Cat hexes were exploited.") +
+        " Hidden tiles remain hidden unless both players had already seen them.";
       return;
     }
 
     if (state.pendingSpy) {
       note += " Spy is active.";
+    } else if (state.pendingFlight) {
+      note += " Airplane is active: choose a highlighted unlocked hex up to 5 hexes away, or skip the flight.";
     } else if (state.awaitingHandoff) {
       note += " Pass the device before the next player begins.";
     } else {
@@ -857,7 +1264,8 @@
         player.name +
         " currently reaches up to ring " +
         player.unlockedRing +
-        ", and the game ends when both endgame hexes are exploited.";
+        ". " +
+        countdownRuleCopy();
     }
 
     dom.phaseNote.textContent = note;
@@ -872,8 +1280,11 @@
     const player = currentPlayer();
     dom.privacyOverlay.hidden = false;
     dom.overlayTitle.textContent = "Pass to " + player.name;
-    dom.overlayCopy.textContent =
-      "Private discoveries only appear for the active player. Once both players know a hex or someone exploits it, that hex becomes public.";
+    dom.overlayCopy.textContent = state.endgameCountdown
+      ? "The first Cat has been found, but its location remains private. Countdown remaining: " +
+        countdownTurnsText() +
+        "."
+      : "Private discoveries only appear for the active player. Once both players know a hex or someone exploits it, that hex becomes public.";
     dom.overlayButton.textContent = "Begin " + player.name + " Turn";
   }
 
@@ -892,7 +1303,15 @@
 
   function tileDetailMeta(tile, visible) {
     if (visible && tile.kind === "scene" && tile.destination) {
-      return tile.destination.fullName + " • Ring " + tile.ring + " • " + formatHex(tile);
+      return (
+        tile.destination.fullName +
+        " • " +
+        VP_ICON_INFO[tile.vpDeckIcon].name +
+        " deck • Ring " +
+        tile.ring +
+        " • " +
+        formatHex(tile)
+      );
     }
 
     return "Ring " + tile.ring + " • " + formatHex(tile);
@@ -930,16 +1349,35 @@
     }
 
     if (tile.kind === "scene" && tile.destination) {
+      const iconInfo = VP_ICON_INFO[tile.vpDeckIcon];
+      const deckCount = state.vpDecks[tile.vpDeckIcon].length;
       let sceneDetail = tile.publicRevealed
-        ? tile.destination.fullName + " is worth " + scenePoints(tile) + " VP when exploited."
-        : "Only you know this destination right now. " + tile.destination.fullName + " is worth " + scenePoints(tile) + " VP when exploited.";
+        ? tile.destination.fullName + " shows " + iconInfo.name + " as its first icon."
+        : "Only you know this destination right now. Its first icon is " + iconInfo.name + ".";
+
+      sceneDetail +=
+        deckCount > 0
+          ? " Exploit it to draw the top card from that deck (" +
+            deckCount +
+            " of 7 cards remain)."
+          : " That VP deck is empty, so this destination cannot be exploited for a card.";
+
+      const drawnCards = tile.vpCardsByPlayer
+        .map(function (card, playerId) {
+          return card ? state.players[playerId].name + " drew " + vpCardCode(card) : "";
+        })
+        .filter(Boolean);
+
+      if (drawnCards.length > 0) {
+        sceneDetail += " " + drawnCards.join("; ") + ".";
+      }
 
       if (tile.ring > currentPlayer().unlockedRing) {
         sceneDetail += " You can see it, but you still cannot enter this ring yet.";
       }
 
       if (tile.isEndgame) {
-        sceneDetail += " This is one of the two end game hexes. When both end game hexes are exploited, the game ends immediately.";
+        sceneDetail += " This is one of the two Cat hexes. Revealing the first Cat starts the final-turn countdown; exploiting both Cats ends the game immediately.";
       }
 
       if (hasAnyExploitation(tile)) {
@@ -963,7 +1401,7 @@
     }
 
     if (tile.isEndgame) {
-      detail += " This is one of the two end game hexes. When both end game hexes are exploited, the game ends immediately.";
+      detail += " This is one of the two Cat hexes. Revealing the first Cat starts the final-turn countdown; exploiting both Cats ends the game immediately.";
     }
 
     if (hasAnyExploitation(tile)) {
@@ -976,7 +1414,7 @@
   function getMoveTargets() {
     if (
       state.pendingSpy ||
-      state.hasExploited ||
+      state.pendingFlight ||
       state.awaitingHandoff ||
       state.gameOver ||
       state.energy < CONFIG.moveCost
@@ -987,6 +1425,35 @@
     return getNeighbors(currentTile()).filter(function (tile) {
       return tile.ring <= currentPlayer().unlockedRing;
     });
+  }
+
+  function getFlightTargets(sourceTile) {
+    if (!sourceTile) {
+      return [];
+    }
+
+    return state.tiles.filter(function (tile) {
+      const distance = hexDistance(tile.q, tile.r, sourceTile.q, sourceTile.r);
+      return (
+        tile.id !== sourceTile.id &&
+        distance <= 5 &&
+        tile.ring <= currentPlayer().unlockedRing
+      );
+    });
+  }
+
+  function canFlyTo(tile) {
+    if (!state.pendingFlight || state.awaitingHandoff || state.gameOver) {
+      return false;
+    }
+
+    const source = getTile(state.pendingFlight.sourceTileId);
+    const distance = hexDistance(tile.q, tile.r, source.q, source.r);
+    return (
+      tile.id !== source.id &&
+      distance <= 5 &&
+      tile.ring <= currentPlayer().unlockedRing
+    );
   }
 
   function getSpyTargets(sourceTile) {
@@ -1011,7 +1478,7 @@
   }
 
   function canMoveTo(tile) {
-    if (state.pendingSpy || state.hasExploited || state.awaitingHandoff || state.gameOver) {
+    if (state.pendingSpy || state.pendingFlight || state.awaitingHandoff || state.gameOver) {
       return false;
     }
 
@@ -1038,16 +1505,30 @@
     return hexDistance(tile.q, tile.r, source.q, source.r) === 1;
   }
 
+  function canExploreCurrentHex() {
+    const tile = currentTile();
+    return (
+      !state.pendingSpy &&
+      !state.pendingFlight &&
+      !state.awaitingHandoff &&
+      !state.gameOver &&
+      state.energy >= CONFIG.exploreCost &&
+      !isVisibleToPlayer(tile, state.currentPlayer) &&
+      tile.kind !== "base"
+    );
+  }
+
   function canExploitCurrentHex() {
     const tile = currentTile();
     return (
       !state.pendingSpy &&
-      !state.hasExploited &&
+      !state.pendingFlight &&
       !state.awaitingHandoff &&
       !state.gameOver &&
       state.energy >= CONFIG.exploitCost &&
       isVisibleToPlayer(tile, state.currentPlayer) &&
       !hasPlayerExploitedTile(tile, state.currentPlayer) &&
+      !(tile.kind === "scene" && state.vpDecks[tile.vpDeckIcon].length === 0) &&
       tile.kind !== "base"
     );
   }
@@ -1065,16 +1546,33 @@
       return "Use the spy effect before ending the turn.";
     }
 
-    if (state.hasExploited) {
-      return "Exploit complete. End the turn and hand the board over.";
+    if (state.pendingFlight) {
+      return "Fly for free to a highlighted unlocked hex up to 5 hexes away, or skip the flight.";
     }
 
     if (state.energy <= 0) {
       return "No energy remains, so the expedition must stop here.";
     }
 
+    if (
+      currentTile().kind === "scene" &&
+      isVisibleToPlayer(currentTile(), state.currentPlayer) &&
+      !hasPlayerExploitedTile(currentTile(), state.currentPlayer) &&
+      state.vpDecks[currentTile().vpDeckIcon].length === 0
+    ) {
+      return "That destination's VP deck is empty; move to another route.";
+    }
+
+    if (canExploreCurrentHex() && getMoveTargets().length > 0) {
+      return "Explore the hex underfoot, or spend 1 energy to keep moving.";
+    }
+
+    if (canExploreCurrentHex()) {
+      return "Explore the hex underfoot to reveal it and prepare it for exploitation.";
+    }
+
     if (canExploitCurrentHex() && getMoveTargets().length > 0) {
-      return "Push deeper, or cash in the hex underfoot.";
+      return "Exploit the explored hex underfoot, or spend 1 energy to keep moving.";
     }
 
     if (canExploitCurrentHex()) {
@@ -1082,7 +1580,7 @@
     }
 
     if (getMoveTargets().length > 0) {
-      return "Click a neighboring hex to explore.";
+      return "Click a neighboring hex to move there for 1 energy.";
     }
 
     return "No legal movement remains from here. A study hex may be needed.";
@@ -1106,7 +1604,7 @@
     }
 
     if (tile.kind === "scene") {
-      return "+" + scenePoints(tile) + " vp";
+      return tile.vpDeckIcon + " deck";
     }
 
     return RESOURCE_INFO[tile.kind].subLabel;
@@ -1118,7 +1616,7 @@
     }
 
     if (tile.kind === "scene" && tile.destination) {
-      return tile.destination.title;
+      return tile.destination.title + " [" + tile.vpDeckIcon + "]";
     }
 
     if (!tile.publicRevealed) {
@@ -1170,6 +1668,10 @@
       tile.publicRevealed = true;
     }
 
+    if (tile.isEndgame && !state.endgameCountdown) {
+      startEndgameCountdown(playerId);
+    }
+
     return { newlyKnown: true, becamePublic: becamePublic };
   }
 
@@ -1182,12 +1684,63 @@
       return;
     }
 
+    finishGame("both-cats", "Both Cat hexes have been exploited. The game ends immediately.");
+  }
+
+  function startEndgameCountdown(revealerId) {
+    const otherId = 1 - revealerId;
+    const turnsRemaining = [0, 0];
+    turnsRemaining[revealerId] = 1;
+    turnsRemaining[otherId] = 2;
+    state.endgameCountdown = {
+      revealerId: revealerId,
+      turnsRemaining: turnsRemaining,
+      revealingTurnPending: true
+    };
+    addLog(
+      state.players[revealerId].name +
+        " found the first Cat. The location stays private, but the countdown begins: " +
+        state.players[revealerId].name +
+        " has 1 additional turn and " +
+        state.players[otherId].name +
+        " has 2."
+    );
+  }
+
+  function finishGame(reason, message) {
     state.pendingSpy = null;
+    state.pendingFlight = null;
     state.awaitingHandoff = false;
     state.gameOver = true;
+    state.gameEndReason = reason;
     state.finalMessage = finalScoreMessage();
-    addLog("Both endgame hexes have been exploited. The game ends immediately.");
+    addLog(message);
     addLog(state.finalMessage);
+  }
+
+  function countdownRuleCopy() {
+    if (!state.endgameCountdown) {
+      return "Cat locations are hidden. Revealing the first Cat gives its revealer 1 additional turn and the other player 2; exploiting both Cats can end the game sooner.";
+    }
+
+    return "Countdown active: " + countdownTurnsText() + ".";
+  }
+
+  function countdownTurnsText() {
+    return state.players
+      .map(function (player) {
+        const turns = state.endgameCountdown.turnsRemaining[player.id];
+        return player.name + " " + turns + " turn" + (turns === 1 ? "" : "s");
+      })
+      .join(" · ");
+  }
+
+  function endgameStatusText() {
+    if (state.endgameCountdown) {
+      return "Cat countdown: " + countdownTurnsText();
+    }
+
+    return "Cats hidden · " + countExploitedEndgameTiles() + "/2 exploited";
   }
 
   function countExploitedEndgameTiles() {
@@ -1212,13 +1765,23 @@
         const total = Object.keys(distribution).reduce(function (sum, kind) {
           return sum + distribution[kind];
         }, 0);
-        const note =
-          ring === CONFIG.boardRadius
-            ? '<div class="distribution-note">End game hexes replace 2 destination spaces in this ring. No study tiles appear here.</div>'
-            : "";
+        const valueNote =
+          '<div class="distribution-note">Destination first icons point to one of the four 7-card VP decks.</div>';
+        const absentPositions = ring * 6 - total;
+        const ringNote =
+          '<div class="distribution-note">Fixed photo layout: ' +
+          absentPositions +
+          " position" +
+          (absentPositions === 1 ? " is" : "s are") +
+          " absent from this ring.</div>" +
+          (ring === CONFIG.boardRadius
+            ? '<div class="distribution-note">The 2 Cat locations are hidden in this outer ring.</div>'
+            : "");
 
         return (
-          '<article class="distribution-card">' +
+          '<article class="distribution-card distribution-card--ring-' +
+          ring +
+          '">' +
           '<div class="distribution-head">' +
           "<strong>Ring " +
           ring +
@@ -1230,7 +1793,8 @@
           '<div class="distribution-copy">' +
           summary +
           "</div>" +
-          note +
+          valueNote +
+          ringNote +
           "</article>"
         );
       })
@@ -1267,11 +1831,16 @@
 
   function describeTile(tile, withArticle) {
     if (tile.kind === "scene" && tile.destination) {
-      return tile.destination.fullName;
+      return (
+        tile.destination.fullName +
+        " with a " +
+        VP_ICON_INFO[tile.vpDeckIcon].name +
+        " first icon"
+      );
     }
 
     if (tile.kind === "endgame") {
-      return withArticle ? "an end game hex" : "end game hex";
+      return withArticle ? "a Cat hex" : "Cat hex";
     }
 
     const parts = [];
@@ -1631,12 +2200,58 @@
       .replace(/\"/g, "&quot;");
   }
 
-  function scenePoints(tile) {
-    return tile.vpValue || 2;
+  function vpScore(iconCounts) {
+    const counts = VP_ICONS.map(function (icon) {
+      return iconCounts[icon];
+    });
+    const squaredTotal = counts.reduce(function (sum, count) {
+      return sum + count * count;
+    }, 0);
+    const maximum = Math.max.apply(null, counts);
+    const minimum = Math.min.apply(null, counts);
+    return squaredTotal + maximum * maximum + minimum * minimum;
+  }
+
+  function vpCardCode(card) {
+    return card.icons.join("");
+  }
+
+  function vpIconMarkup(icon) {
+    const info = VP_ICON_INFO[icon];
+    return (
+      '<span class="vp-icon vp-icon--' +
+      icon.toLowerCase() +
+      '" title="' +
+      info.name +
+      '" aria-label="' +
+      info.name +
+      '"><svg viewBox="0 0 24 24" aria-hidden="true">' +
+      vpIconPathMarkup(icon) +
+      "</svg><span>" +
+      icon +
+      "</span></span>"
+    );
+  }
+
+  function vpIconPathMarkup(icon) {
+    if (icon === "M") {
+      return '<path d="m2.5 20 7.1-13 3.1 5 2.2-3.4L21.5 20Zm4.6-5.1 2.5-4.6 2.2 3.6-1.7 2-1.4-1.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>';
+    }
+    if (icon === "W") {
+      return '<path d="M3 7c3-2.2 5.9 2.2 9 0s6 2.2 9 0M3 12c3-2.2 5.9 2.2 9 0s6 2.2 9 0M3 17c3-2.2 5.9 2.2 9 0s6 2.2 9 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+    }
+    if (icon === "H") {
+      return '<path d="M7 5V3h11a2 2 0 0 1 2 2v13H8a3 3 0 0 0-3 3V5a2 2 0 0 1 2-2h1m0 15h12v3H8a3 3 0 1 1 0-6h9V6H8m2 4h5m-5 3h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+    return '<path d="M12 2c4.3 2.8 6.2 7 6.2 12.2V21H5.8v-6.8C5.8 9 7.7 4.8 12 2Zm-5.7 8.3h11.4M6 15.2h12M9 4.7l8.7 10.5M15 4.7 6.3 15.2M12 2v19" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/>';
   }
 
   function hasPlayerExploitedTile(tile, playerId) {
     return tile.exploitedBy[playerId];
+  }
+
+  function hasPlayerExploredTile(tile, playerId) {
+    return tile.exploredBy[playerId];
   }
 
   function hasAnyExploitation(tile) {

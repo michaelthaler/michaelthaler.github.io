@@ -4,13 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Exploration</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TM195RVGW"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-9TM195RVGW');
-    </script>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -21,7 +14,7 @@
           <h1>Exploration</h1>
           <p class="intro">
             Reveal a hidden world, manage scarce energy, and claim far-flung destinations before
-            the endgame spaces bring the expedition to a close.
+            a hidden Cat starts the final expedition countdown.
           </p>
         </div>
         <div class="turn-chip" id="turnChip"></div>
@@ -40,55 +33,78 @@
               <span>Energy Left</span>
               <strong id="energyValue">0</strong>
             </div>
-            <button class="button button--primary" id="exploitButton" type="button">
+            <p class="action-costs">Move · Explore · Exploit — 1 energy each · repeat while energy remains</p>
+            <button class="button button--primary" id="exploreButton" type="button">
+              Explore Current Hex
+            </button>
+            <button class="button" id="exploitButton" type="button">
               Exploit Current Hex
             </button>
             <button class="button" id="endTurnButton" type="button">End Turn</button>
             <button class="button button--ghost" id="skipSpyButton" type="button" hidden>
               Skip Spy
             </button>
+            <button class="button button--ghost" id="skipFlightButton" type="button" hidden>
+              Skip Flight
+            </button>
+          </section>
+
+          <section>
+            <p class="panel-label">VP Decks</p>
+            <p class="vp-rule">
+              A destination's first icon selects a deck. Drawn icons score
+              M² + W² + H² + B² + max² + min².
+            </p>
+            <div class="vp-deck-list" id="vpDeckList"></div>
           </section>
 
           <section>
             <p class="panel-label">Legend</p>
             <ul class="legend">
               <li>
-                <span class="legend-swatch legend-swatch--scene"></span>
+                <svg class="legend-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#symbol-mountain"></use></svg>
                 <div>
                   <strong>Destination</strong>
-                  <span>Exploit for a hidden VP value from 2 to 5.</span>
+                  <span>Explore to see its first icon; exploit to draw from that icon's VP deck.</span>
                 </div>
               </li>
               <li>
-                <span class="legend-swatch legend-swatch--tea"></span>
+                <svg class="legend-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#symbol-airplane"></use></svg>
+                <div>
+                  <strong>Airplane</strong>
+                  <span>Exploit for an optional free flight to an unlocked hex up to 5 hexes away.</span>
+                </div>
+              </li>
+              <li>
+                <svg class="legend-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#symbol-tea"></use></svg>
                 <div>
                   <strong>Tea</strong>
                   <span>Bank 2 extra energy for your next turn.</span>
                 </div>
               </li>
               <li>
-                <span class="legend-swatch legend-swatch--spy"></span>
+                <svg class="legend-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#symbol-magnifier"></use></svg>
                 <div>
                   <strong>Spy</strong>
-                  <span>Reveal all adjacent hidden hexes.</span>
+                  <span>Reveal all adjacent hidden hexes without exploring them.</span>
                 </div>
               </li>
               <li>
-                <span class="legend-swatch legend-swatch--study"></span>
+                <svg class="legend-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#symbol-book"></use></svg>
                 <div>
                   <strong>Study</strong>
                   <span>Unlock the next ring for that player.</span>
                 </div>
               </li>
               <li>
-                <span class="legend-swatch legend-swatch--endgame"></span>
+                <svg class="legend-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#symbol-cat"></use></svg>
                 <div>
                   <strong>Endgame</strong>
-                  <span>Two last-ring spaces end the game once both have been exploited.</span>
+                  <span>The first revealed Cat starts the final-turn countdown; both exploited Cats end it immediately.</span>
                 </div>
               </li>
               <li>
-                <span class="legend-swatch legend-swatch--hidden"></span>
+                <span class="legend-icon legend-icon--hidden" aria-hidden="true">?</span>
                 <div>
                   <strong>Face-down</strong>
                   <span>Unknown hexes stay private until exploited or known by both players.</span>
