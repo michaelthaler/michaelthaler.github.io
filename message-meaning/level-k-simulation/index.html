@@ -934,25 +934,6 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
     #levelk-message-grid-viz .lk-sender-panel { grid-column: 1 / -1; }
     #levelk-message-grid-viz .lk-panel-title { margin: 0 0 0.25rem; font-weight: 500; }
-    #levelk-message-grid-viz .lk-panel-subtitle {
-      color: var(--muted-foreground);
-      min-height: 1.4em;
-      margin-bottom: 0.15rem;
-    }
-    #levelk-message-grid-viz .lk-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem 0.9rem;
-      margin-bottom: 0.25rem;
-      color: var(--muted-foreground);
-    }
-    #levelk-message-grid-viz .lk-legend-item { display: inline-flex; align-items: center; gap: 0.35rem; }
-    #levelk-message-grid-viz .lk-swatch { width: 1.7rem; height: 0; border-top-width: 2px; border-top-style: solid; }
-    #levelk-message-grid-viz .lk-swatch-sender { border-top-color: var(--viz-series-1); }
-    #levelk-message-grid-viz .lk-swatch-receiver { border-top-color: var(--viz-series-2); }
-    #levelk-message-grid-viz .lk-swatch-outcome { border-top-color: var(--viz-series-5); }
-    #levelk-message-grid-viz .lk-swatch-identity { border-top-color: var(--viz-series-3); border-top-style: dashed; }
-    #levelk-message-grid-viz .lk-swatch-scaled { border-top-color: var(--viz-series-4); border-top-style: dashed; }
     #levelk-message-grid-viz svg { display: block; width: 100%; height: auto; overflow: visible; }
     #levelk-message-grid-viz rect[data-chart-frame] {
       fill: transparent;
@@ -1080,31 +1061,14 @@ html&gt;body{padding:0}&lt;/style&gt;
     &lt;div class=&quot;lk-panels&quot;&gt;
       &lt;section class=&quot;lk-sender-panel&quot; aria-labelledby=&quot;lkg-sender-title&quot;&gt;
         &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lkg-sender-title&quot;&gt;Sender: state → message&lt;/h3&gt;
-        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lkg-sender-subtitle&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;lk-legend text-small&quot; aria-label=&quot;Sender chart legend&quot;&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-sender&quot;&gt;&lt;/span&gt;Current sender&lt;/span&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-identity&quot;&gt;&lt;/span&gt;m = θ&lt;/span&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-scaled&quot;&gt;&lt;/span&gt;m = θ/2&lt;/span&gt;
-        &lt;/div&gt;
         &lt;div id=&quot;lkg-sender-chart&quot;&gt;&lt;/div&gt;
       &lt;/section&gt;
       &lt;section aria-labelledby=&quot;lkg-receiver-title&quot;&gt;
         &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lkg-receiver-title&quot;&gt;Receiver: message → guess&lt;/h3&gt;
-        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lkg-receiver-subtitle&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;lk-legend text-small&quot; aria-label=&quot;Receiver chart legend&quot;&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-receiver&quot;&gt;&lt;/span&gt;Current receiver&lt;/span&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-identity&quot;&gt;&lt;/span&gt;g(m) = m&lt;/span&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-scaled&quot;&gt;&lt;/span&gt;g(m) = 2m&lt;/span&gt;
-        &lt;/div&gt;
         &lt;div id=&quot;lkg-receiver-chart&quot;&gt;&lt;/div&gt;
       &lt;/section&gt;
       &lt;section class=&quot;lk-outcome-panel&quot; aria-labelledby=&quot;lkg-outcome-title&quot;&gt;
         &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lkg-outcome-title&quot;&gt;Outcome: state → receiver guess&lt;/h3&gt;
-        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lkg-outcome-subtitle&quot;&gt;&lt;/div&gt;
-        &lt;div class=&quot;lk-legend text-small&quot; aria-label=&quot;Outcome chart legend&quot;&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-outcome&quot;&gt;&lt;/span&gt;Current outcome&lt;/span&gt;
-          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-identity&quot;&gt;&lt;/span&gt;x = y&lt;/span&gt;
-        &lt;/div&gt;
         &lt;div id=&quot;lkg-outcome-chart&quot;&gt;&lt;/div&gt;
       &lt;/section&gt;
     &lt;/div&gt;
@@ -1227,9 +1191,6 @@ html&gt;body{padding:0}&lt;/style&gt;
       const next = root.querySelector(&quot;#lkg-next&quot;);
       const levelLabel = root.querySelector(&quot;#lkg-level-label&quot;);
       const status = root.querySelector(&quot;#lkg-status&quot;);
-      const senderSubtitle = root.querySelector(&quot;#lkg-sender-subtitle&quot;);
-      const receiverSubtitle = root.querySelector(&quot;#lkg-receiver-subtitle&quot;);
-      const outcomeSubtitle = root.querySelector(&quot;#lkg-outcome-subtitle&quot;);
       const detail = root.querySelector(&quot;#lkg-detail&quot;);
       const tooltip = root.querySelector(&quot;#lkg-tooltip&quot;);
       let model = buildModel(1, 1);
@@ -1495,15 +1456,6 @@ html&gt;body{padding:0}&lt;/style&gt;
         status.textContent = snapshot.sender
           ? `States every ${formatNumber(model.stateDelta)} · messages every ${formatNumber(model.messageDelta)} · ${snapshot.role} update · ${used} of ${model.messages.length} messages used · profile MSE ${mse.toFixed(6)}`
           : `States every ${formatNumber(model.stateDelta)} · messages every ${formatNumber(model.messageDelta)} · receiver baseline g(m) = m · ${model.states.length} states · ${model.messages.length} messages`;
-        senderSubtitle.textContent = currentLevel === 0
-          ? &quot;Not yet specified&quot;
-          : currentLevel % 2 ? &quot;Current best response&quot; : `Inherited from Level ${currentLevel - 1}`;
-        receiverSubtitle.textContent = currentLevel === 0
-          ? &quot;Current baseline&quot;
-          : currentLevel % 2 ? `Beliefs inherited from Level ${currentLevel - 1}` : &quot;Current posterior-mean best response&quot;;
-        outcomeSubtitle.textContent = currentLevel === 0
-          ? &quot;Not yet defined&quot;
-          : &quot;Current composed outcome&quot;;
         detail.textContent = currentLevel === model.maxLevel
           ? (model.stabilized
             ? `Stationary partition reached: ${used} messages used; MSE ${mse.toFixed(6)}.`
