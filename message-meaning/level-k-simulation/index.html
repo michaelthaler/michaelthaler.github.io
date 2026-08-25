@@ -929,13 +929,8 @@ html&gt;body{padding:0}&lt;/style&gt;
       display: grid;
       grid-template-columns: calc(33.333333% - 0.333333rem + 28px) minmax(0, 1fr);
       gap: 1rem;
-      width: calc(50% + 92px);
-      max-width: 100%;
     }
-    #levelk-message-grid-viz .lk-sender-panel {
-      grid-column: 1 / -1;
-      width: calc(100% - 50px);
-    }
+    #levelk-message-grid-viz .lk-sender-panel { grid-column: 1 / -1; }
     #levelk-message-grid-viz .lk-panel-title { margin: 0 0 0.25rem; font-weight: 500; }
     #levelk-message-grid-viz .lk-panel-subtitle {
       color: var(--muted-foreground);
@@ -1037,10 +1032,6 @@ html&gt;body{padding:0}&lt;/style&gt;
       max-width: 18rem;
     }
     #levelk-message-grid-viz .lk-root-relative { position: relative; }
-    @media (max-width: 800px) {
-      #levelk-message-grid-viz .lk-panels { width: 100%; }
-      #levelk-message-grid-viz .lk-sender-panel { width: 100%; }
-    }
     @media (max-width: 620px) {
       #levelk-message-grid-viz .lk-panels { grid-template-columns: 1fr; }
       #levelk-message-grid-viz .lk-sender-panel { grid-column: auto; }
