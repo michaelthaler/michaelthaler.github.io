@@ -1,180 +1,22 @@
 <!doctype html>
-<html lang="en-US">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>level-k-development-h1-d05.html</title>
-<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;max-width:736px;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+<title>Level K Development Message Grid</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
 </head>
 <body>
-<iframe id="codex-visualization" sandbox="allow-scripts" scrolling="no" referrerpolicy="no-referrer" title="level-k-development-h1-d05.html" data-srcdoc="&lt;!doctype html&gt;
-&lt;html lang=&quot;en-US&quot;&gt;
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Level K Development Message Grid" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
 &lt;meta charset=&quot;utf-8&quot;&gt;
 &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
 &lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
-&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'&quot;&gt;
-&lt;title&gt;level-k-development-h1-d05.html&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;script&gt;(() =&gt; {
-  const root = document.documentElement;
-  const mediaQuery = globalThis.matchMedia(&quot;(prefers-color-scheme: dark)&quot;);
-  const apply = Reflect.apply;
-  const isArray = Array.isArray;
-  const parentWindow = globalThis.parent;
-  /**
-   * @param {object} prototype
-   * @param {string} property
-   */
-  const getPrototypeGetter = (prototype, property) =&gt; {
-    // oxlint-disable-next-line typescript/unbound-method -- invoked through captured Reflect.apply
-    const getter = Object.getOwnPropertyDescriptor(prototype, property)?.get;
-    if (getter == null) {
-      throw new Error(`Missing ${property} getter`);
-    }
-    return getter;
-  };
-  const getMessageData = getPrototypeGetter(MessageEvent.prototype, &quot;data&quot;);
-  const getMessagePorts = getPrototypeGetter(MessageEvent.prototype, &quot;ports&quot;);
-  const getMessageSource = getPrototypeGetter(MessageEvent.prototype, &quot;source&quot;);
-  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
-  const addHostMessageListener = MessagePort.prototype.addEventListener;
-  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
-  const postHostMessage = MessagePort.prototype.postMessage;
-  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
-  const startHostPort = MessagePort.prototype.start;
-  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
-  const stopMessagePropagation = Event.prototype.stopImmediatePropagation;
-  /** @type {MessagePort | null} */
-  let hostPort = null;
-  const postToHost = (type, payload) =&gt; {
-    if (hostPort != null) {
-      apply(postHostMessage, hostPort, [{ type, ...payload }]);
-    }
-  };
-  const openExternal = ({ href }) =&gt; {
-    if (globalThis.navigator.userActivation?.isActive === true) {
-      postToHost(&quot;open-external&quot;, { href });
-    }
-  };
-  const sendFollowUpMessage = ({ context, prompt, title }) =&gt; {
-    if (globalThis.navigator.userActivation?.isActive === true) {
-      postToHost(&quot;follow-up&quot;, { context, prompt, title });
-    }
-    return Promise.resolve();
-  };
-  const syncTheme = () =&gt; {
-    const theme = mediaQuery.matches ? &quot;dark&quot; : &quot;light&quot;;
-    root.dataset.theme = theme;
-    globalThis.openai = {
-      ...globalThis.openai,
-      openExternal,
-      sendFollowUpMessage,
-      theme,
-      visualizationStyleVariables: {},
-      visualizationTheme: theme,
-    };
-    globalThis.dispatchEvent(
-      new CustomEvent(&quot;openai:set_globals&quot;, {
-        detail: { globals: globalThis.openai },
-      }),
-    );
-  };
-  const sendHeight = () =&gt; {
-    postToHost(&quot;height&quot;, {
-      height: Math.ceil(
-        Math.max(
-          document.body.scrollHeight,
-          document.body.getBoundingClientRect().height,
-        ),
-      ),
-    });
-  };
-
-  globalThis.addEventListener(
-    &quot;message&quot;,
-    (event) =&gt; {
-      const data = apply(getMessageData, event, []);
-      const ports = apply(getMessagePorts, event, []);
-      const source = apply(getMessageSource, event, []);
-      if (
-        source !== parentWindow ||
-        typeof data !== &quot;object&quot; ||
-        data == null ||
-        data.type !== &quot;codex-visualization-initialize&quot; ||
-        !isArray(ports) ||
-        ports.length !== 1
-      ) {
-        return;
-      }
-      apply(stopMessagePropagation, event, []);
-      const nextHostPort = ports[0];
-      try {
-        apply(addHostMessageListener, nextHostPort, [
-          &quot;message&quot;,
-          (event) =&gt; {
-            const data = apply(getMessageData, event, []);
-            if (typeof data === &quot;object&quot; &amp;&amp; data?.type === &quot;measure&quot;) {
-              sendHeight();
-            }
-          },
-        ]);
-        apply(startHostPort, nextHostPort, []);
-      } catch {
-        return;
-      }
-      hostPort = nextHostPort;
-      sendHeight();
-    },
-    { capture: true },
-  );
-  document.currentScript?.remove();
-  mediaQuery.addEventListener(&quot;change&quot;, syncTheme);
-  globalThis.addEventListener(&quot;click&quot;, (event) =&gt; {
-    if (event.defaultPrevented) {
-      return;
-    }
-    let element = null;
-    if (event.target instanceof globalThis.Element) {
-      element = event.target;
-    } else if (event.target instanceof globalThis.Node) {
-      element = event.target.parentElement;
-    }
-    const link = element?.closest(&quot;a[href]&quot;);
-    const href = link?.getAttribute(&quot;href&quot;);
-    if (href == null) {
-      return;
-    }
-    if (href.startsWith(&quot;#&quot;)) {
-      let id;
-      try {
-        id = decodeURIComponent(href.slice(1));
-      } catch {
-        return;
-      }
-      const target = id.length === 0 ? root : document.getElementById(id);
-      if (
-        target == null ||
-        globalThis.navigator.userActivation?.isActive !== true
-      ) {
-        return;
-      }
-      event.preventDefault();
-      postToHost(&quot;scroll-to&quot;, {
-        top: target.getBoundingClientRect().top + globalThis.scrollY,
-      });
-      return;
-    }
-    event.preventDefault();
-    openExternal({ href });
-  });
-  new ResizeObserver(sendHeight).observe(document.body);
-  syncTheme();
-})();
-&lt;/script&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Level K Development Message Grid&lt;/title&gt;
 &lt;style&gt;:root {
   color-scheme: light dark;
   background-color: var(
@@ -289,7 +131,7 @@
   --radius-2xl: calc(var(--radius) * 1.6);
   --radius-full: 9999px;
   --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
-  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E&quot;);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
 
   /* Legacy aliases; not part of the current agent contract. */
   --viz-bg: transparent;
@@ -335,7 +177,7 @@ html &gt; body {
   padding: 5px;
   color: var(--foreground);
   background: transparent !important;
-  font-family: var(--font-sans);
+  font-family: var(--font-sans) !important;
   font-size: var(--font-size-normal);
   font-weight: var(--font-weight-normal);
   line-height: var(--line-height-normal);
@@ -491,7 +333,7 @@ code:not(pre code) {
   background: var(--card);
 }
 
-#widget &gt; :not(.card) {
+#widget &gt; :not(.card, .progress) {
   width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
@@ -555,6 +397,23 @@ code:not(pre code) {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+}
+
+.progress {
+  display: flex;
+  height: 6px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 6px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
 }
 
 .viz-badge {
@@ -999,10 +858,10 @@ textarea.form-control {
 }
 
 .btn:not(.btn-primary, .viz-tile):is(
-    [aria-pressed=&quot;true&quot;],
-    [aria-selected=&quot;true&quot;],
-    .is-selected
-  ) {
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
   border-color: var(--primary);
   color: var(--primary-foreground);
   background: var(--primary);
@@ -1044,128 +903,123 @@ svg.lucide {
 }
 
 html&gt;body{padding:0}&lt;/style&gt;
-&lt;script&gt;
-(() =&gt; {
-  const root = document.documentElement;
-  const initialGlobals =
-    globalThis.__codexVisualizationInitialGlobals ?? globalThis.openai;
-  delete globalThis.__codexVisualizationInitialGlobals;
-  let appliedProperties = [];
-
-  const applyHostStyleVariables = (styleVariables) =&gt; {
-    if (styleVariables == null || typeof styleVariables !== &quot;object&quot;) {
-      return;
-    }
-    for (const property of appliedProperties) {
-      root.style.removeProperty(property);
-    }
-    appliedProperties = [];
-    for (const [property, value] of Object.entries(styleVariables)) {
-      if (property.startsWith(&quot;--&quot;) &amp;&amp; typeof value === &quot;string&quot;) {
-        root.style.setProperty(property, value);
-        appliedProperties.push(property);
-      }
-    }
-  };
-
-  const syncHostStyles = (globals) =&gt; {
-    applyHostStyleVariables(globals?.visualizationStyleVariables);
-  };
-
-  syncHostStyles(initialGlobals);
-  globalThis.addEventListener(&quot;openai:set_globals&quot;, (event) =&gt; {
-    syncHostStyles(event.detail?.globals);
-  });
-})();
-&lt;/script&gt;
-
-&lt;div id=&quot;levelk-h1-d05-viz&quot; aria-label=&quot;Interactive level-k development with integer states and half-point messages&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;levelk-message-grid-viz&quot; aria-label=&quot;Interactive level-k development with selectable state-grid and message-grid widths&quot;&gt;
   &lt;style&gt;
-    #levelk-h1-d05-viz { color: var(--foreground); width: 100%; }
-    #levelk-h1-d05-viz .lk-heading { margin: 0 0 0.35rem; }
-    #levelk-h1-d05-viz .lk-status { color: var(--muted-foreground); margin-bottom: 0.8rem; }
-    #levelk-h1-d05-viz .lk-controls {
+    #levelk-message-grid-viz { color: var(--foreground); width: 100%; }
+    #levelk-message-grid-viz .lk-heading { margin: 0 0 0.35rem; }
+    #levelk-message-grid-viz .lk-status { color: var(--muted-foreground); margin-bottom: 0.8rem; }
+    #levelk-message-grid-viz .lk-settings { margin-bottom: 0.8rem; }
+    #levelk-message-grid-viz .lk-controls {
       display: grid;
       grid-template-columns: auto minmax(160px, 1fr) auto;
       align-items: center;
       gap: 0.65rem;
       margin-bottom: 0.8rem;
     }
-    #levelk-h1-d05-viz .lk-controls input[type=&quot;range&quot;] { width: 100%; }
-    #levelk-h1-d05-viz .lk-level-label {
+    #levelk-message-grid-viz .lk-controls input[type=&quot;range&quot;] { width: 100%; }
+    #levelk-message-grid-viz .lk-level-label {
       grid-column: 1 / -1;
       grid-row: 1;
       text-align: center;
       font-weight: 500;
     }
-    #levelk-h1-d05-viz .lk-panels {
+    #levelk-message-grid-viz .lk-panels {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: calc(33.333333% - 0.333333rem + 28px) minmax(0, 1fr);
       gap: 1rem;
     }
-    #levelk-h1-d05-viz .lk-panel-title { margin: 0 0 0.25rem; font-weight: 500; }
-    #levelk-h1-d05-viz .lk-panel-subtitle {
+    #levelk-message-grid-viz .lk-sender-panel { grid-column: 1 / -1; }
+    #levelk-message-grid-viz .lk-panel-title { margin: 0 0 0.25rem; font-weight: 500; }
+    #levelk-message-grid-viz .lk-panel-subtitle {
       color: var(--muted-foreground);
       min-height: 1.4em;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.15rem;
     }
-    #levelk-h1-d05-viz svg { display: block; width: 100%; height: auto; overflow: visible; }
-    #levelk-h1-d05-viz rect[data-chart-frame] {
+    #levelk-message-grid-viz .lk-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.9rem;
+      margin-bottom: 0.25rem;
+      color: var(--muted-foreground);
+    }
+    #levelk-message-grid-viz .lk-legend-item { display: inline-flex; align-items: center; gap: 0.35rem; }
+    #levelk-message-grid-viz .lk-swatch { width: 1.7rem; height: 0; border-top-width: 2px; border-top-style: solid; }
+    #levelk-message-grid-viz .lk-swatch-sender { border-top-color: var(--viz-series-1); }
+    #levelk-message-grid-viz .lk-swatch-receiver { border-top-color: var(--viz-series-2); }
+    #levelk-message-grid-viz .lk-swatch-outcome { border-top-color: var(--viz-series-5); }
+    #levelk-message-grid-viz .lk-swatch-identity { border-top-color: var(--viz-series-3); border-top-style: dashed; }
+    #levelk-message-grid-viz .lk-swatch-scaled { border-top-color: var(--viz-series-4); border-top-style: dashed; }
+    #levelk-message-grid-viz svg { display: block; width: 100%; height: auto; overflow: visible; }
+    #levelk-message-grid-viz rect[data-chart-frame] {
       fill: transparent;
       stroke: var(--border);
       stroke-width: 1;
     }
-    #levelk-h1-d05-viz .lk-grid { stroke: var(--border); stroke-width: 1; opacity: 0.65; }
-    #levelk-h1-d05-viz .lk-tick,
-    #levelk-h1-d05-viz .axis-title { fill: var(--foreground); font-size: 12px; }
-    #levelk-h1-d05-viz .lk-line-sender {
+    #levelk-message-grid-viz .lk-grid { stroke: var(--border); stroke-width: 1; opacity: 0.65; }
+    #levelk-message-grid-viz .lk-tick,
+    #levelk-message-grid-viz .axis-title { fill: var(--foreground); font-size: 12px; }
+    #levelk-message-grid-viz .lk-line-sender {
       fill: none;
       stroke: var(--viz-series-1);
       stroke-width: 2;
     }
-    #levelk-h1-d05-viz .lk-line-receiver {
+    #levelk-message-grid-viz .lk-line-receiver {
       fill: none;
       stroke: var(--viz-series-2);
       stroke-width: 2;
     }
-    #levelk-h1-d05-viz .lk-dot-sender { fill: var(--viz-series-1); }
-    #levelk-h1-d05-viz .lk-dot-receiver { fill: var(--viz-series-2); }
-    #levelk-h1-d05-viz .lk-dot-unused {
+    #levelk-message-grid-viz .lk-line-outcome {
+      fill: none;
+      stroke: var(--viz-series-5);
+      stroke-width: 2;
+    }
+    #levelk-message-grid-viz .lk-dot-sender { fill: var(--viz-series-1); }
+    #levelk-message-grid-viz .lk-dot-receiver { fill: var(--viz-series-2); }
+    #levelk-message-grid-viz .lk-dot-outcome { fill: var(--viz-series-5); }
+    #levelk-message-grid-viz .lk-dot-unused {
       fill: var(--background);
       stroke: var(--muted-foreground);
       stroke-width: 1;
     }
-    #levelk-h1-d05-viz .lk-baseline {
+    #levelk-message-grid-viz .lk-reference {
       fill: none;
-      stroke: var(--muted-foreground);
-      stroke-width: 1.25;
-      stroke-dasharray: 4 4;
-      opacity: 0.8;
+      stroke-width: 1.5;
+      opacity: 0.9;
     }
-    #levelk-h1-d05-viz .lk-empty {
+    #levelk-message-grid-viz .lk-ref-identity {
+      stroke: var(--viz-series-3);
+      stroke-dasharray: 7 5;
+    }
+    #levelk-message-grid-viz .lk-ref-scaled {
+      stroke: var(--viz-series-4);
+      stroke-dasharray: 2 5;
+    }
+    #levelk-message-grid-viz .lk-empty {
       fill: var(--muted-foreground);
       font-size: 12px;
       text-anchor: middle;
     }
-    #levelk-h1-d05-viz .lk-guide {
+    #levelk-message-grid-viz .lk-guide {
       stroke: var(--foreground);
       stroke-width: 1;
       opacity: 0.65;
       pointer-events: none;
     }
-    #levelk-h1-d05-viz .lk-hover-marker {
+    #levelk-message-grid-viz .lk-hover-marker {
       fill: var(--background);
       stroke: var(--foreground);
       stroke-width: 2;
       pointer-events: none;
     }
-    #levelk-h1-d05-viz .lk-overlay { fill: transparent; cursor: crosshair; }
-    #levelk-h1-d05-viz .lk-detail {
+    #levelk-message-grid-viz .lk-overlay { fill: transparent; cursor: crosshair; }
+    #levelk-message-grid-viz .lk-detail {
       margin-top: 0.7rem;
       min-height: 1.5em;
       color: var(--foreground);
     }
-    #levelk-h1-d05-viz .lk-tooltip {
+    #levelk-message-grid-viz .lk-tooltip {
       position: absolute;
       pointer-events: none;
       display: none;
@@ -1177,114 +1031,239 @@ html&gt;body{padding:0}&lt;/style&gt;
       padding: 0.4rem 0.55rem;
       max-width: 18rem;
     }
-    #levelk-h1-d05-viz .lk-root-relative { position: relative; }
+    #levelk-message-grid-viz .lk-root-relative { position: relative; }
     @media (max-width: 620px) {
-      #levelk-h1-d05-viz .lk-panels { grid-template-columns: 1fr; }
+      #levelk-message-grid-viz .lk-panels { grid-template-columns: 1fr; }
+      #levelk-message-grid-viz .lk-sender-panel { grid-column: auto; }
     }
   &lt;/style&gt;
 
   &lt;div class=&quot;lk-root-relative&quot;&gt;
-    &lt;h2 class=&quot;lk-heading&quot;&gt;Level-k development: states every 1, messages every 0.5&lt;/h2&gt;
-    &lt;div class=&quot;lk-status&quot; id=&quot;lk05-status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+    &lt;h2 class=&quot;lk-heading&quot;&gt;Level-k development&lt;/h2&gt;
+    &lt;div class=&quot;lk-status&quot; id=&quot;lkg-status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+
+    &lt;div class=&quot;lk-settings viz-controls&quot;&gt;
+      &lt;label class=&quot;form-label&quot; for=&quot;lkg-state-delta&quot;&gt;
+        State θ every
+        &lt;select class=&quot;form-select&quot; id=&quot;lkg-state-delta&quot;&gt;
+          &lt;option value=&quot;0.05&quot;&gt;0.05&lt;/option&gt;
+          &lt;option value=&quot;0.1&quot;&gt;0.1&lt;/option&gt;
+          &lt;option value=&quot;0.5&quot;&gt;0.5&lt;/option&gt;
+          &lt;option value=&quot;1&quot; selected&gt;1&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;form-label&quot; for=&quot;lkg-delta&quot;&gt;
+        Messages every
+        &lt;select class=&quot;form-select&quot; id=&quot;lkg-delta&quot;&gt;
+          &lt;option value=&quot;0.05&quot;&gt;0.05&lt;/option&gt;
+          &lt;option value=&quot;0.1&quot;&gt;0.1&lt;/option&gt;
+          &lt;option value=&quot;0.5&quot; selected&gt;0.5&lt;/option&gt;
+          &lt;option value=&quot;1&quot;&gt;1&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/label&gt;
+    &lt;/div&gt;
 
     &lt;div class=&quot;lk-controls viz-controls&quot;&gt;
-      &lt;div class=&quot;lk-level-label&quot; id=&quot;lk05-level-label&quot;&gt;Level 0 · Receiver&lt;/div&gt;
-      &lt;button type=&quot;button&quot; class=&quot;btn btn-ghost&quot; id=&quot;lk05-prev&quot;&gt;Previous&lt;/button&gt;
-      &lt;input id=&quot;lk05-slider&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;68&quot; step=&quot;1&quot; value=&quot;0&quot; aria-label=&quot;Level from 0 to 68&quot;&gt;
-      &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; id=&quot;lk05-next&quot;&gt;Next&lt;/button&gt;
+      &lt;div class=&quot;lk-level-label&quot; id=&quot;lkg-level-label&quot;&gt;Level 0 · Receiver&lt;/div&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-ghost&quot; id=&quot;lkg-prev&quot;&gt;Previous&lt;/button&gt;
+      &lt;input id=&quot;lkg-slider&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;68&quot; step=&quot;1&quot; value=&quot;0&quot; aria-label=&quot;Level&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; id=&quot;lkg-next&quot;&gt;Next&lt;/button&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;lk-panels&quot;&gt;
-      &lt;section aria-labelledby=&quot;lk05-sender-title&quot;&gt;
-        &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lk05-sender-title&quot;&gt;Sender: state → message&lt;/h3&gt;
-        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lk05-sender-subtitle&quot;&gt;&lt;/div&gt;
-        &lt;div id=&quot;lk05-sender-chart&quot;&gt;&lt;/div&gt;
+      &lt;section class=&quot;lk-sender-panel&quot; aria-labelledby=&quot;lkg-sender-title&quot;&gt;
+        &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lkg-sender-title&quot;&gt;Sender: state → message&lt;/h3&gt;
+        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lkg-sender-subtitle&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;lk-legend text-small&quot; aria-label=&quot;Sender chart legend&quot;&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-sender&quot;&gt;&lt;/span&gt;Current sender&lt;/span&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-identity&quot;&gt;&lt;/span&gt;m = θ&lt;/span&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-scaled&quot;&gt;&lt;/span&gt;m = θ/2&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;lkg-sender-chart&quot;&gt;&lt;/div&gt;
       &lt;/section&gt;
-      &lt;section aria-labelledby=&quot;lk05-receiver-title&quot;&gt;
-        &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lk05-receiver-title&quot;&gt;Receiver: message → guess&lt;/h3&gt;
-        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lk05-receiver-subtitle&quot;&gt;&lt;/div&gt;
-        &lt;div id=&quot;lk05-receiver-chart&quot;&gt;&lt;/div&gt;
+      &lt;section aria-labelledby=&quot;lkg-receiver-title&quot;&gt;
+        &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lkg-receiver-title&quot;&gt;Receiver: message → guess&lt;/h3&gt;
+        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lkg-receiver-subtitle&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;lk-legend text-small&quot; aria-label=&quot;Receiver chart legend&quot;&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-receiver&quot;&gt;&lt;/span&gt;Current receiver&lt;/span&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-identity&quot;&gt;&lt;/span&gt;g(m) = m&lt;/span&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-scaled&quot;&gt;&lt;/span&gt;g(m) = 2m&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;lkg-receiver-chart&quot;&gt;&lt;/div&gt;
+      &lt;/section&gt;
+      &lt;section class=&quot;lk-outcome-panel&quot; aria-labelledby=&quot;lkg-outcome-title&quot;&gt;
+        &lt;h3 class=&quot;lk-panel-title&quot; id=&quot;lkg-outcome-title&quot;&gt;Outcome: state → receiver guess&lt;/h3&gt;
+        &lt;div class=&quot;lk-panel-subtitle&quot; id=&quot;lkg-outcome-subtitle&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;lk-legend text-small&quot; aria-label=&quot;Outcome chart legend&quot;&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-outcome&quot;&gt;&lt;/span&gt;Current outcome&lt;/span&gt;
+          &lt;span class=&quot;lk-legend-item&quot;&gt;&lt;span class=&quot;lk-swatch lk-swatch-identity&quot;&gt;&lt;/span&gt;x = y&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;lkg-outcome-chart&quot;&gt;&lt;/div&gt;
       &lt;/section&gt;
     &lt;/div&gt;
 
-    &lt;div class=&quot;lk-detail&quot; id=&quot;lk05-detail&quot; aria-live=&quot;polite&quot;&gt;Move over either chart to inspect the mapping.&lt;/div&gt;
-    &lt;div class=&quot;lk-tooltip&quot; id=&quot;lk05-tooltip&quot; role=&quot;tooltip&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;lk-detail&quot; id=&quot;lkg-detail&quot; aria-live=&quot;polite&quot;&gt;Move over any chart to inspect the mapping.&lt;/div&gt;
+    &lt;div class=&quot;lk-tooltip&quot; id=&quot;lkg-tooltip&quot; role=&quot;tooltip&quot;&gt;&lt;/div&gt;
   &lt;/div&gt;
 
   &lt;script src=&quot;https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js&quot;&gt;&lt;/script&gt;
   &lt;script&gt;
     (() =&gt; {
-      const root = document.getElementById(&quot;levelk-h1-d05-viz&quot;);
-      const states = Array.from({ length: 101 }, (_, i) =&gt; i);
-      const messages = Array.from({ length: 101 }, (_, i) =&gt; i / 2);
-      const snapshots = [];
-      let receiver = Object.fromEntries(messages.map(m =&gt; [m, m]));
-      let sender = null;
+      const root = document.getElementById(&quot;levelk-message-grid-viz&quot;);
+      const cache = new Map();
 
-      function lowerArgMin(items, score) {
-        let best = items[0];
-        let bestScore = score(best);
-        for (let i = 1; i &lt; items.length; i += 1) {
-          const candidate = items[i];
-          const candidateScore = score(candidate);
-          if (candidateScore &lt; bestScore - 1e-9 ||
-              (Math.abs(candidateScore - bestScore) &lt;= 1e-9 &amp;&amp; candidate &lt; best)) {
-            best = candidate;
-            bestScore = candidateScore;
+      function arraysEqual(a, b) {
+        if (!a || !b || a.length !== b.length) return false;
+        for (let i = 0; i &lt; a.length; i += 1) if (a[i] !== b[i]) return false;
+        return true;
+      }
+
+      function bestSender(states, receiver) {
+        const order = Array.from({ length: receiver.length }, (_, i) =&gt; i)
+          .sort((a, b) =&gt; receiver[a] - receiver[b] || a - b);
+        const guesses = [];
+        const messageIndices = [];
+        order.forEach(index =&gt; {
+          const guess = receiver[index];
+          if (!guesses.length || Math.abs(guess - guesses[guesses.length - 1]) &gt; 1e-12) {
+            guesses.push(guess);
+            messageIndices.push(index);
           }
-        }
-        return best;
+        });
+
+        const result = new Uint16Array(states.length);
+        states.forEach((state, stateIndex) =&gt; {
+          let left = 0;
+          let right = guesses.length;
+          while (left &lt; right) {
+            const middle = (left + right) &gt;&gt; 1;
+            if (guesses[middle] &lt; state) left = middle + 1;
+            else right = middle;
+          }
+          const low = Math.max(0, left - 1);
+          const high = Math.min(guesses.length - 1, left);
+          const lowError = Math.abs(guesses[low] - state);
+          const highError = Math.abs(guesses[high] - state);
+          result[stateIndex] = highError &lt; lowError - 1e-9 ||
+            (Math.abs(highError - lowError) &lt;= 1e-9 &amp;&amp; messageIndices[high] &lt; messageIndices[low])
+            ? messageIndices[high]
+            : messageIndices[low];
+        });
+        return result;
       }
 
-      snapshots.push({ level: 0, role: &quot;Receiver&quot;, sender: null, receiver: { ...receiver } });
-      for (let level = 1; level &lt;= 68; level += 1) {
-        if (level % 2 === 1) {
-          sender = Object.fromEntries(states.map(x =&gt; [x, lowerArgMin(messages, m =&gt; Math.abs(receiver[m] - x))]));
-        } else {
-          const pools = Object.fromEntries(messages.map(m =&gt; [m, []]));
-          states.forEach(x =&gt; pools[sender[x]].push(x));
-          receiver = Object.fromEntries(messages.map(m =&gt; [
-            m,
-            pools[m].length ? pools[m].reduce((a, b) =&gt; a + b, 0) / pools[m].length : m,
-          ]));
+      function buildModel(stateDelta, messageDelta) {
+        const key = `${stateDelta}|${messageDelta}`;
+        if (cache.has(key)) return cache.get(key);
+        const stateSteps = Math.round(100 / stateDelta);
+        const messageSteps = Math.round(50 / messageDelta);
+        const states = Float64Array.from(
+          { length: stateSteps + 1 },
+          (_, i) =&gt; Number((i * stateDelta).toFixed(2)),
+        );
+        const messages = Float64Array.from(
+          { length: messageSteps + 1 },
+          (_, i) =&gt; Number((i * messageDelta).toFixed(2)),
+        );
+        let receiver = messages.slice();
+        let sender = null;
+        let pendingSender = null;
+        let firstStableEven = null;
+        const snapshots = [{ level: 0, role: &quot;Receiver&quot;, sender: null, receiver }];
+
+        for (let level = 1; ; level += 1) {
+          if (level % 2 === 1) {
+            sender = pendingSender || bestSender(states, receiver);
+            pendingSender = null;
+          } else {
+            const sums = new Float64Array(messages.length);
+            const counts = new Uint32Array(messages.length);
+            states.forEach((state, stateIndex) =&gt; {
+              const index = sender[stateIndex];
+              sums[index] += state;
+              counts[index] += 1;
+            });
+            receiver = messages.slice();
+            for (let i = 0; i &lt; messages.length; i += 1) {
+              if (counts[i]) receiver[i] = sums[i] / counts[i];
+            }
+            pendingSender = bestSender(states, receiver);
+            if (firstStableEven === null &amp;&amp; arraysEqual(pendingSender, sender)) firstStableEven = level;
+          }
+          snapshots.push({
+            level,
+            role: level % 2 ? &quot;Sender&quot; : &quot;Receiver&quot;,
+            sender,
+            receiver,
+          });
+          if (firstStableEven !== null &amp;&amp; level &gt;= firstStableEven + 2) break;
         }
-        snapshots.push({ level, role: level % 2 ? &quot;Sender&quot; : &quot;Receiver&quot;, sender: sender ? { ...sender } : null, receiver: { ...receiver } });
+
+        const maxLevel = snapshots.length - 1;
+        const model = {
+          stateDelta,
+          messageDelta,
+          states,
+          messages,
+          snapshots,
+          maxLevel,
+          stabilized: firstStableEven !== null &amp;&amp; maxLevel &gt;= firstStableEven + 2,
+        };
+        cache.set(key, model);
+        return model;
       }
 
-      const slider = root.querySelector(&quot;#lk05-slider&quot;);
-      const prev = root.querySelector(&quot;#lk05-prev&quot;);
-      const next = root.querySelector(&quot;#lk05-next&quot;);
-      const levelLabel = root.querySelector(&quot;#lk05-level-label&quot;);
-      const status = root.querySelector(&quot;#lk05-status&quot;);
-      const senderSubtitle = root.querySelector(&quot;#lk05-sender-subtitle&quot;);
-      const receiverSubtitle = root.querySelector(&quot;#lk05-receiver-subtitle&quot;);
-      const detail = root.querySelector(&quot;#lk05-detail&quot;);
-      const tooltip = root.querySelector(&quot;#lk05-tooltip&quot;);
+      const slider = root.querySelector(&quot;#lkg-slider&quot;);
+      const deltaSelect = root.querySelector(&quot;#lkg-delta&quot;);
+      const stateDeltaSelect = root.querySelector(&quot;#lkg-state-delta&quot;);
+      const prev = root.querySelector(&quot;#lkg-prev&quot;);
+      const next = root.querySelector(&quot;#lkg-next&quot;);
+      const levelLabel = root.querySelector(&quot;#lkg-level-label&quot;);
+      const status = root.querySelector(&quot;#lkg-status&quot;);
+      const senderSubtitle = root.querySelector(&quot;#lkg-sender-subtitle&quot;);
+      const receiverSubtitle = root.querySelector(&quot;#lkg-receiver-subtitle&quot;);
+      const outcomeSubtitle = root.querySelector(&quot;#lkg-outcome-subtitle&quot;);
+      const detail = root.querySelector(&quot;#lkg-detail&quot;);
+      const tooltip = root.querySelector(&quot;#lkg-tooltip&quot;);
+      let model = buildModel(1, 0.5);
       let currentLevel = 0;
+      let resizeFrame = null;
 
       function poolsFor(snapshot) {
-        const pools = Object.fromEntries(messages.map(m =&gt; [m, []]));
-        if (snapshot.sender) states.forEach(x =&gt; pools[snapshot.sender[x]].push(x));
+        const pools = new Map();
+        if (snapshot.sender) {
+          model.states.forEach((state, stateIndex) =&gt; {
+            const index = snapshot.sender[stateIndex];
+            if (!pools.has(index)) pools.set(index, { first: state, last: state, count: 0 });
+            const pool = pools.get(index);
+            pool.last = state;
+            pool.count += 1;
+          });
+        }
         return pools;
       }
 
       function formatNumber(value) {
-        return Number.isInteger(value) ? String(value) : value.toFixed(1);
+        const rounded = Math.round(value * 100) / 100;
+        return rounded.toFixed(2).replace(/\.00$/, &quot;&quot;).replace(/(\.\d)0$/, &quot;$1&quot;);
       }
 
       function profileMse(snapshot) {
         if (!snapshot.sender) return null;
-        return states.reduce((sum, x) =&gt; {
-          const error = snapshot.receiver[snapshot.sender[x]] - x;
-          return sum + error * error;
-        }, 0) / states.length;
+        let total = 0;
+        model.states.forEach((state, stateIndex) =&gt; {
+          const guess = snapshot.receiver[snapshot.sender[stateIndex]];
+          const error = guess - state;
+          total += error * error;
+        });
+        return total / model.states.length;
       }
 
       function showTooltip(event, text) {
         const rootRect = root.getBoundingClientRect();
         tooltip.textContent = text;
         tooltip.style.display = &quot;block&quot;;
-        tooltip.style.left = `${Math.min(event.clientX - rootRect.left + 12, rootRect.width - tooltip.offsetWidth - 8)}px`;
+        tooltip.style.left = `${Math.max(8, Math.min(event.clientX - rootRect.left + 12, rootRect.width - tooltip.offsetWidth - 8))}px`;
         tooltip.style.top = `${event.clientY - rootRect.top + 12}px`;
         detail.textContent = text;
       }
@@ -1334,13 +1313,13 @@ html&gt;body{padding:0}&lt;/style&gt;
             const [pointerX] = d3.pointer(event);
             const target = scaleX.invert(pointerX);
             const index = d3.bisector(valueX).center(data, target);
-            const d = data[index];
+            const datum = data[index];
             guide.style(&quot;display&quot;, null)
-              .attr(&quot;x1&quot;, scaleX(valueX(d))).attr(&quot;x2&quot;, scaleX(valueX(d)))
+              .attr(&quot;x1&quot;, scaleX(valueX(datum))).attr(&quot;x2&quot;, scaleX(valueX(datum)))
               .attr(&quot;y1&quot;, margins.top).attr(&quot;y2&quot;, height - margins.bottom);
             marker.style(&quot;display&quot;, null)
-              .attr(&quot;cx&quot;, scaleX(valueX(d))).attr(&quot;cy&quot;, valueY(d));
-            showTooltip(event, tooltipText(d));
+              .attr(&quot;cx&quot;, scaleX(valueX(datum))).attr(&quot;cy&quot;, valueY(datum));
+            showTooltip(event, tooltipText(datum));
           })
           .on(&quot;pointerleave&quot;, () =&gt; {
             guide.style(&quot;display&quot;, &quot;none&quot;);
@@ -1349,20 +1328,32 @@ html&gt;body{padding:0}&lt;/style&gt;
           });
       }
 
+      function appendReference(svg, data, xScale, yScale, className, xValue, yValue) {
+        svg.append(&quot;path&quot;).datum(data)
+          .attr(&quot;class&quot;, `lk-reference ${className}`)
+          .attr(&quot;d&quot;, d3.line().x(d =&gt; xScale(xValue(d))).y(d =&gt; yScale(yValue(d))));
+      }
+
       function drawSender(snapshot) {
-        const container = root.querySelector(&quot;#lk05-sender-chart&quot;);
+        const container = root.querySelector(&quot;#lkg-sender-chart&quot;);
         container.innerHTML = &quot;&quot;;
-        const width = Math.max(300, Math.round(container.getBoundingClientRect().width));
-        const height = 310;
+        const width = Math.round(container.getBoundingClientRect().width);
         const margins = { top: 16, right: 20, bottom: 46, left: 64 };
+        const plotWidth = width - margins.left - margins.right;
+        const height = margins.top + margins.bottom + plotWidth / 2;
         const svg = d3.select(container).append(&quot;svg&quot;)
           .attr(&quot;viewBox&quot;, `0 0 ${width} ${height}`)
-          .attr(&quot;aria-label&quot;, `Sender policy at level ${snapshot.level}`);
+          .attr(&quot;role&quot;, &quot;img&quot;)
+          .attr(&quot;aria-labelledby&quot;, &quot;lkg-sender-svg-title lkg-sender-svg-desc&quot;);
+        svg.append(&quot;title&quot;).attr(&quot;id&quot;, &quot;lkg-sender-svg-title&quot;).text(`Sender policy at level ${snapshot.level}`);
+        svg.append(&quot;desc&quot;).attr(&quot;id&quot;, &quot;lkg-sender-svg-desc&quot;).text(&quot;Current sender policy with dashed m equals theta and m equals theta over two reference lines.&quot;);
         const x = d3.scaleLinear().domain([0, 100]).range([margins.left, width - margins.right]);
         const y = d3.scaleLinear().domain([0, 50]).range([height - margins.bottom, margins.top]);
         const xTicks = width &lt; 430 ? [0, 50, 100] : [0, 20, 40, 60, 80, 100];
         const yTicks = width &lt; 430 ? [0, 20, 40, 50] : [0, 10, 20, 30, 40, 50];
         addAxes(svg, width, height, margins, x, y, xTicks, yTicks, &quot;State θ&quot;, &quot;Message m&quot;);
+        appendReference(svg, [{ state: 0, message: 0 }, { state: 50, message: 50 }], x, y, &quot;lk-ref-identity&quot;, d =&gt; d.state, d =&gt; d.message);
+        appendReference(svg, [{ state: 0, message: 0 }, { state: 100, message: 50 }], x, y, &quot;lk-ref-scaled&quot;, d =&gt; d.state, d =&gt; d.message);
         if (!snapshot.sender) {
           svg.append(&quot;text&quot;).attr(&quot;class&quot;, &quot;lk-empty&quot;)
             .attr(&quot;x&quot;, margins.left + (width - margins.left - margins.right) / 2)
@@ -1370,92 +1361,171 @@ html&gt;body{padding:0}&lt;/style&gt;
             .text(&quot;Sender reasoning begins at Level 1&quot;);
           return;
         }
-        const data = states.map(state =&gt; ({ state, message: snapshot.sender[state] }));
+        const data = Array.from(model.states, (state, stateIndex) =&gt; ({
+          state,
+          messageIndex: snapshot.sender[stateIndex],
+          message: model.messages[snapshot.sender[stateIndex]],
+        }));
         svg.append(&quot;path&quot;).datum(data).attr(&quot;class&quot;, &quot;lk-line-sender&quot;)
           .attr(&quot;d&quot;, d3.line().x(d =&gt; x(d.state)).y(d =&gt; y(d.message)));
-        svg.selectAll(&quot;circle.lk-dot-sender&quot;).data(data).join(&quot;circle&quot;)
+        const senderSampleStep = Math.max(1, Math.ceil(data.length / 240));
+        const senderSample = data.filter((datum, index) =&gt; index % senderSampleStep === 0 || index === data.length - 1);
+        svg.selectAll(&quot;circle.lk-dot-sender&quot;).data(senderSample).join(&quot;circle&quot;)
           .attr(&quot;class&quot;, &quot;lk-dot-sender&quot;)
           .attr(&quot;cx&quot;, d =&gt; x(d.state)).attr(&quot;cy&quot;, d =&gt; y(d.message)).attr(&quot;r&quot;, 2.2);
-        addNearestOverlay(svg, width, height, margins, x, data, d =&gt; d.state, d =&gt; y(d.message), d =&gt; {
-          const guess = snapshot.receiver[d.message];
-          return `State ${d.state} → message ${formatNumber(d.message)} → guess ${formatNumber(guess)}; error ${formatNumber(Math.abs(guess - d.state))}`;
+        addNearestOverlay(svg, width, height, margins, x, data, d =&gt; d.state, d =&gt; y(d.message), datum =&gt; {
+          const guess = snapshot.receiver[datum.messageIndex];
+          return `State ${datum.state} → message ${formatNumber(datum.message)} → guess ${formatNumber(guess)}; error ${formatNumber(Math.abs(guess - datum.state))}`;
         });
       }
 
       function drawReceiver(snapshot) {
-        const container = root.querySelector(&quot;#lk05-receiver-chart&quot;);
+        const container = root.querySelector(&quot;#lkg-receiver-chart&quot;);
         container.innerHTML = &quot;&quot;;
-        const width = Math.max(300, Math.round(container.getBoundingClientRect().width));
-        const height = 310;
+        const width = Math.round(container.getBoundingClientRect().width);
         const margins = { top: 16, right: 20, bottom: 46, left: 64 };
+        const plotWidth = width - margins.left - margins.right;
+        const height = margins.top + margins.bottom + plotWidth * 2;
         const svg = d3.select(container).append(&quot;svg&quot;)
           .attr(&quot;viewBox&quot;, `0 0 ${width} ${height}`)
-          .attr(&quot;aria-label&quot;, `Receiver policy at level ${snapshot.level}`);
+          .attr(&quot;role&quot;, &quot;img&quot;)
+          .attr(&quot;aria-labelledby&quot;, &quot;lkg-receiver-svg-title lkg-receiver-svg-desc&quot;);
+        svg.append(&quot;title&quot;).attr(&quot;id&quot;, &quot;lkg-receiver-svg-title&quot;).text(`Receiver policy at level ${snapshot.level}`);
+        svg.append(&quot;desc&quot;).attr(&quot;id&quot;, &quot;lkg-receiver-svg-desc&quot;).text(&quot;Current receiver policy with dashed g of m equals m and g of m equals two m reference lines.&quot;);
         const x = d3.scaleLinear().domain([0, 50]).range([margins.left, width - margins.right]);
         const y = d3.scaleLinear().domain([0, 100]).range([height - margins.bottom, margins.top]);
         const xTicks = width &lt; 430 ? [0, 25, 50] : [0, 10, 20, 30, 40, 50];
         const yTicks = width &lt; 430 ? [0, 40, 80, 100] : [0, 20, 40, 60, 80, 100];
         addAxes(svg, width, height, margins, x, y, xTicks, yTicks, &quot;Message m&quot;, &quot;Receiver guess g(m)&quot;);
-        svg.append(&quot;path&quot;).datum([{ message: 0, guess: 0 }, { message: 50, guess: 50 }])
-          .attr(&quot;class&quot;, &quot;lk-baseline&quot;)
-          .attr(&quot;d&quot;, d3.line().x(d =&gt; x(d.message)).y(d =&gt; y(d.guess)));
+        appendReference(svg, [{ message: 0, guess: 0 }, { message: 50, guess: 50 }], x, y, &quot;lk-ref-identity&quot;, d =&gt; d.message, d =&gt; d.guess);
+        appendReference(svg, [{ message: 0, guess: 0 }, { message: 50, guess: 100 }], x, y, &quot;lk-ref-scaled&quot;, d =&gt; d.message, d =&gt; d.guess);
+
         const pools = poolsFor(snapshot);
-        const data = messages.map(message =&gt; ({
+        const data = Array.from(model.messages, (message, index) =&gt; ({
+          index,
           message,
-          guess: snapshot.receiver[message],
-          used: !snapshot.sender || pools[message].length &gt; 0,
-          states: pools[message],
+          guess: snapshot.receiver[index],
+          used: !snapshot.sender || pools.has(index),
+          pool: pools.get(index) || null,
         }));
-        const active = data.filter(d =&gt; d.used);
+        const active = snapshot.sender ? data.filter(d =&gt; d.used) : data;
         svg.append(&quot;path&quot;).datum(active).attr(&quot;class&quot;, &quot;lk-line-receiver&quot;)
           .attr(&quot;d&quot;, d3.line().x(d =&gt; x(d.message)).y(d =&gt; y(d.guess)));
-        svg.selectAll(&quot;circle.lk-receiver-point&quot;).data(data).join(&quot;circle&quot;)
+
+        const sampleStep = Math.max(1, Math.ceil(data.length / 220));
+        const includeEveryUsed = active.length &lt;= 300;
+        const sample = data.filter((datum, index) =&gt;
+          index % sampleStep === 0 || index === data.length - 1 || (includeEveryUsed &amp;&amp; datum.used));
+        svg.selectAll(&quot;circle.lk-receiver-point&quot;).data(sample).join(&quot;circle&quot;)
           .attr(&quot;class&quot;, d =&gt; `lk-receiver-point ${d.used ? &quot;lk-dot-receiver&quot; : &quot;lk-dot-unused&quot;}`)
           .attr(&quot;cx&quot;, d =&gt; x(d.message)).attr(&quot;cy&quot;, d =&gt; y(d.guess)).attr(&quot;r&quot;, d =&gt; d.used ? 2.8 : 2);
-        addNearestOverlay(svg, width, height, margins, x, data, d =&gt; d.message, d =&gt; y(d.guess), d =&gt; {
-          const source = d.states.length
-            ? (d.states.length === 1 ? `state ${d.states[0]}` : `states ${d.states[0]}–${d.states[d.states.length - 1]}`)
+        addNearestOverlay(svg, width, height, margins, x, data, d =&gt; d.message, d =&gt; y(d.guess), datum =&gt; {
+          const source = datum.pool
+            ? (datum.pool.count === 1
+              ? `state ${formatNumber(datum.pool.first)}`
+              : `states ${formatNumber(datum.pool.first)}–${formatNumber(datum.pool.last)}`)
             : &quot;unused; literal off-path interpretation&quot;;
-          return `Message ${formatNumber(d.message)} → guess ${formatNumber(d.guess)} (${source})`;
+          return `Message ${formatNumber(datum.message)} → guess ${formatNumber(datum.guess)} (${source})`;
         });
       }
 
+      function drawOutcome(snapshot) {
+        const container = root.querySelector(&quot;#lkg-outcome-chart&quot;);
+        container.innerHTML = &quot;&quot;;
+        const width = Math.round(container.getBoundingClientRect().width);
+        const margins = { top: 16, right: 20, bottom: 46, left: 64 };
+        const plotWidth = width - margins.left - margins.right;
+        const height = margins.top + margins.bottom + plotWidth;
+        const svg = d3.select(container).append(&quot;svg&quot;)
+          .attr(&quot;viewBox&quot;, `0 0 ${width} ${height}`)
+          .attr(&quot;role&quot;, &quot;img&quot;)
+          .attr(&quot;aria-labelledby&quot;, &quot;lkg-outcome-svg-title lkg-outcome-svg-desc&quot;);
+        svg.append(&quot;title&quot;).attr(&quot;id&quot;, &quot;lkg-outcome-svg-title&quot;).text(`State-to-guess outcome at level ${snapshot.level}`);
+        svg.append(&quot;desc&quot;).attr(&quot;id&quot;, &quot;lkg-outcome-svg-desc&quot;).text(&quot;Receiver guess generated by each state, with a dashed identity reference line where the guess equals the state.&quot;);
+        const x = d3.scaleLinear().domain([0, 100]).range([margins.left, width - margins.right]);
+        const y = d3.scaleLinear().domain([0, 100]).range([height - margins.bottom, margins.top]);
+        const xTicks = width &lt; 430 ? [0, 50, 100] : [0, 20, 40, 60, 80, 100];
+        const yTicks = width &lt; 430 ? [0, 40, 80, 100] : [0, 20, 40, 60, 80, 100];
+        addAxes(svg, width, height, margins, x, y, xTicks, yTicks, &quot;State θ&quot;, &quot;Receiver guess g(m)&quot;);
+        appendReference(svg, [{ state: 0, guess: 0 }, { state: 100, guess: 100 }], x, y, &quot;lk-ref-identity&quot;, d =&gt; d.state, d =&gt; d.guess);
+        if (!snapshot.sender) {
+          svg.append(&quot;text&quot;).attr(&quot;class&quot;, &quot;lk-empty&quot;)
+            .attr(&quot;x&quot;, margins.left + (width - margins.left - margins.right) / 2)
+            .attr(&quot;y&quot;, margins.top + (height - margins.top - margins.bottom) / 2)
+            .text(&quot;Outcome mapping begins at Level 1&quot;);
+          return;
+        }
+
+        const data = Array.from(model.states, (state, stateIndex) =&gt; {
+          const messageIndex = snapshot.sender[stateIndex];
+          return {
+            state,
+            message: model.messages[messageIndex],
+            guess: snapshot.receiver[messageIndex],
+          };
+        });
+        svg.append(&quot;path&quot;).datum(data).attr(&quot;class&quot;, &quot;lk-line-outcome&quot;)
+          .attr(&quot;d&quot;, d3.line().x(d =&gt; x(d.state)).y(d =&gt; y(d.guess)));
+        const sampleStep = Math.max(1, Math.ceil(data.length / 240));
+        const sample = data.filter((datum, index) =&gt; index % sampleStep === 0 || index === data.length - 1);
+        svg.selectAll(&quot;circle.lk-dot-outcome&quot;).data(sample).join(&quot;circle&quot;)
+          .attr(&quot;class&quot;, &quot;lk-dot-outcome&quot;)
+          .attr(&quot;cx&quot;, d =&gt; x(d.state)).attr(&quot;cy&quot;, d =&gt; y(d.guess)).attr(&quot;r&quot;, 2.2);
+        addNearestOverlay(svg, width, height, margins, x, data, d =&gt; d.state, d =&gt; y(d.guess), datum =&gt;
+          `State ${formatNumber(datum.state)} → guess ${formatNumber(datum.guess)} via message ${formatNumber(datum.message)}; error ${formatNumber(Math.abs(datum.guess - datum.state))}`);
+      }
+
       function render() {
-        const snapshot = snapshots[currentLevel];
+        const snapshot = model.snapshots[currentLevel];
+        slider.max = String(model.maxLevel);
         slider.value = String(currentLevel);
+        slider.setAttribute(&quot;aria-label&quot;, `Level from 0 to ${model.maxLevel}`);
         prev.disabled = currentLevel === 0;
-        next.disabled = currentLevel === 68;
-        levelLabel.textContent = `Level ${currentLevel} · ${snapshot.role}${currentLevel === 68 ? &quot; · stationary&quot; : &quot;&quot;}`;
+        next.disabled = currentLevel === model.maxLevel;
+        levelLabel.textContent = `Level ${currentLevel} · ${snapshot.role}${currentLevel === model.maxLevel &amp;&amp; model.stabilized ? &quot; · stationary&quot; : &quot;&quot;}`;
         const mse = profileMse(snapshot);
-        const used = snapshot.sender ? new Set(Object.values(snapshot.sender)).size : null;
+        const used = snapshot.sender ? new Set(snapshot.sender).size : null;
         status.textContent = snapshot.sender
-          ? `${snapshot.role} update · ${used} of 101 messages used · profile MSE ${mse.toFixed(6)}`
-          : &quot;Receiver baseline · g(m) = m&quot;;
+          ? `States every ${formatNumber(model.stateDelta)} · messages every ${formatNumber(model.messageDelta)} · ${snapshot.role} update · ${used} of ${model.messages.length} messages used · profile MSE ${mse.toFixed(6)}`
+          : `States every ${formatNumber(model.stateDelta)} · messages every ${formatNumber(model.messageDelta)} · receiver baseline g(m) = m · ${model.states.length} states · ${model.messages.length} messages`;
         senderSubtitle.textContent = currentLevel === 0
           ? &quot;Not yet specified&quot;
           : currentLevel % 2 ? &quot;Current best response&quot; : `Inherited from Level ${currentLevel - 1}`;
         receiverSubtitle.textContent = currentLevel === 0
           ? &quot;Current baseline&quot;
           : currentLevel % 2 ? `Beliefs inherited from Level ${currentLevel - 1}` : &quot;Current posterior-mean best response&quot;;
-        detail.textContent = currentLevel === 68
-          ? &quot;Stationary partition reached: 56 messages used; MSE 2.450495.&quot;
-          : &quot;Move over either chart to inspect the mapping.&quot;;
+        outcomeSubtitle.textContent = currentLevel === 0
+          ? &quot;Not yet defined&quot;
+          : &quot;Current composed outcome&quot;;
+        detail.textContent = currentLevel === model.maxLevel
+          ? (model.stabilized
+            ? `Stationary partition reached: ${used} messages used; MSE ${mse.toFixed(6)}.`
+            : `Level ${model.maxLevel} displayed; the profile has not stabilized within the display limit.`)
+          : &quot;Move over any chart to inspect the mapping.&quot;;
         hideTooltip();
         drawSender(snapshot);
         drawReceiver(snapshot);
+        drawOutcome(snapshot);
       }
 
       prev.addEventListener(&quot;click&quot;, () =&gt; { if (currentLevel &gt; 0) { currentLevel -= 1; render(); } });
-      next.addEventListener(&quot;click&quot;, () =&gt; { if (currentLevel &lt; 68) { currentLevel += 1; render(); } });
+      next.addEventListener(&quot;click&quot;, () =&gt; { if (currentLevel &lt; model.maxLevel) { currentLevel += 1; render(); } });
       slider.addEventListener(&quot;input&quot;, () =&gt; { currentLevel = Number(slider.value); render(); });
-      new ResizeObserver(() =&gt; render()).observe(root.querySelector(&quot;.lk-panels&quot;));
+      function updateModelFromControls() {
+        model = buildModel(Number(stateDeltaSelect.value), Number(deltaSelect.value));
+        currentLevel = Math.min(currentLevel, model.maxLevel);
+        render();
+      }
+      deltaSelect.addEventListener(&quot;change&quot;, updateModelFromControls);
+      stateDeltaSelect.addEventListener(&quot;change&quot;, updateModelFromControls);
+      new ResizeObserver(() =&gt; {
+        if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(render);
+      }).observe(root.querySelector(&quot;.lk-panels&quot;));
       render();
     })();
   &lt;/script&gt;
 &lt;/div&gt;
-
-
-&lt;style id=&quot;codex-visualization-document-scrollbar&quot;&gt;html,body{scrollbar-width:none!important}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none!important}&lt;/style&gt;
 
 &lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
@@ -1699,112 +1769,5 @@ html&gt;body{padding:0}&lt;/style&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 "></iframe>
-<script>(() => {
-  const frame = document.getElementById("codex-visualization");
-  if (!(frame instanceof HTMLIFrameElement)) {
-    return;
-  }
-  let viewportHeight = globalThis.innerHeight;
-
-  const channel = new MessageChannel();
-  channel.port1.addEventListener("message", (event) => {
-    const data = event.data;
-    if (typeof data !== "object" || data == null) {
-      return;
-    }
-    if (data.type === "height") {
-      const height = data.height;
-      if (
-        typeof height === "number" &&
-        Number.isFinite(height) &&
-        height >= 0 &&
-        height <= 10_000
-      ) {
-        frame.style.height = Math.ceil(height) + "px";
-      }
-      return;
-    }
-    if (data.type === "scroll-to") {
-      const top = data.top;
-      if (
-        typeof top === "number" &&
-        Number.isFinite(top) &&
-        top >= 0 &&
-        globalThis.navigator.userActivation?.isActive === true
-      ) {
-        globalThis.scrollTo({
-          top: Math.ceil(
-            globalThis.scrollY + frame.getBoundingClientRect().top + top,
-          ),
-        });
-      }
-      return;
-    }
-    if (data.type === "open-external") {
-      const rawHref = data.href;
-      if (typeof rawHref !== "string") {
-        return;
-      }
-      let href;
-      try {
-        const url = new URL(rawHref, document.baseURI);
-        if (url.protocol !== "https:") {
-          return;
-        }
-        href = url.href;
-      } catch {
-        return;
-      }
-      if (globalThis.navigator.userActivation?.isActive === true) {
-        const anchor = document.createElement("a");
-        anchor.href = href;
-        anchor.rel = "noopener noreferrer";
-        anchor.target = "_blank";
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.remove();
-      }
-      return;
-    }
-    if (data.type === "follow-up") {
-      const prompt = data.prompt;
-      if (
-        typeof prompt !== "string" ||
-        globalThis.navigator.userActivation?.isActive !== true
-      ) {
-        return;
-      }
-      const title = data.title;
-      globalThis.prompt(typeof title === "string" ? title : prompt, prompt);
-    }
-  });
-  channel.port1.start();
-  const srcdoc = frame.dataset.srcdoc;
-  if (srcdoc == null) {
-    return;
-  }
-  globalThis.addEventListener("resize", () => {
-    const height = Number.parseFloat(frame.style.height);
-    if (!Number.isFinite(height) || height <= viewportHeight) {
-      frame.style.removeProperty("height");
-    }
-    viewportHeight = globalThis.innerHeight;
-    channel.port1.postMessage({ type: "measure" });
-  });
-  frame.addEventListener(
-    "load",
-    () => {
-      frame.contentWindow?.postMessage(
-        { type: "codex-visualization-initialize" },
-        "*",
-        [channel.port2],
-      );
-    },
-    { once: true },
-  );
-  frame.srcdoc = srcdoc;
-  delete frame.dataset.srcdoc;
-})();
-</script>
 </body>
 </html>
