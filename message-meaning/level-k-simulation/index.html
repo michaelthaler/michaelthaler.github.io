@@ -929,6 +929,8 @@ html&gt;body{padding:0}&lt;/style&gt;
       display: grid;
       grid-template-columns: calc(33.333333% - 0.333333rem + 28px) minmax(0, 1fr);
       gap: 1rem;
+      width: 70%;
+      margin-inline: auto;
     }
     #levelk-message-grid-viz .lk-sender-panel { grid-column: 1 / -1; }
     #levelk-message-grid-viz .lk-panel-title { margin: 0 0 0.25rem; font-weight: 500; }
@@ -1032,6 +1034,9 @@ html&gt;body{padding:0}&lt;/style&gt;
       max-width: 18rem;
     }
     #levelk-message-grid-viz .lk-root-relative { position: relative; }
+    @media (max-width: 800px) {
+      #levelk-message-grid-viz .lk-panels { width: 100%; }
+    }
     @media (max-width: 620px) {
       #levelk-message-grid-viz .lk-panels { grid-template-columns: 1fr; }
       #levelk-message-grid-viz .lk-sender-panel { grid-column: auto; }
@@ -1050,6 +1055,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;option value=&quot;0.1&quot;&gt;0.1&lt;/option&gt;
           &lt;option value=&quot;0.5&quot;&gt;0.5&lt;/option&gt;
           &lt;option value=&quot;1&quot; selected&gt;1&lt;/option&gt;
+          &lt;option value=&quot;5&quot;&gt;5&lt;/option&gt;
         &lt;/select&gt;
       &lt;/label&gt;
       &lt;label class=&quot;form-label&quot; for=&quot;lkg-delta&quot;&gt;
@@ -1057,8 +1063,9 @@ html&gt;body{padding:0}&lt;/style&gt;
         &lt;select class=&quot;form-select&quot; id=&quot;lkg-delta&quot;&gt;
           &lt;option value=&quot;0.05&quot;&gt;0.05&lt;/option&gt;
           &lt;option value=&quot;0.1&quot;&gt;0.1&lt;/option&gt;
-          &lt;option value=&quot;0.5&quot; selected&gt;0.5&lt;/option&gt;
-          &lt;option value=&quot;1&quot;&gt;1&lt;/option&gt;
+          &lt;option value=&quot;0.5&quot;&gt;0.5&lt;/option&gt;
+          &lt;option value=&quot;1&quot; selected&gt;1&lt;/option&gt;
+          &lt;option value=&quot;5&quot;&gt;5&lt;/option&gt;
         &lt;/select&gt;
       &lt;/label&gt;
     &lt;/div&gt;
@@ -1066,7 +1073,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     &lt;div class=&quot;lk-controls viz-controls&quot;&gt;
       &lt;div class=&quot;lk-level-label&quot; id=&quot;lkg-level-label&quot;&gt;Level 0 · Receiver&lt;/div&gt;
       &lt;button type=&quot;button&quot; class=&quot;btn btn-ghost&quot; id=&quot;lkg-prev&quot;&gt;Previous&lt;/button&gt;
-      &lt;input id=&quot;lkg-slider&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;68&quot; step=&quot;1&quot; value=&quot;0&quot; aria-label=&quot;Level&quot;&gt;
+      &lt;input id=&quot;lkg-slider&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;74&quot; step=&quot;1&quot; value=&quot;0&quot; aria-label=&quot;Level&quot;&gt;
       &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; id=&quot;lkg-next&quot;&gt;Next&lt;/button&gt;
     &lt;/div&gt;
 
@@ -1225,7 +1232,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       const outcomeSubtitle = root.querySelector(&quot;#lkg-outcome-subtitle&quot;);
       const detail = root.querySelector(&quot;#lkg-detail&quot;);
       const tooltip = root.querySelector(&quot;#lkg-tooltip&quot;);
-      let model = buildModel(1, 0.5);
+      let model = buildModel(1, 1);
       let currentLevel = 0;
       let resizeFrame = null;
 
